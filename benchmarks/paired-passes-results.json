@@ -1,0 +1,204 @@
+{
+  "node": "v22.17.1",
+  "passes": 5,
+  "iterations": 30,
+  "perPass": [
+    {
+      "pass": 1,
+      "medians": {
+        "xxNative": 7.619099999999889,
+        "xxPureJs": 23.654800000000023,
+        "hfsNative": 12.08445000000006,
+        "hfsPureJs": 26.775949999999966
+      },
+      "medianOfRatios": {
+        "likeForLikeNative": 1.5327843761514746,
+        "likeForLikePureJs": 1.1696326393260805,
+        "asReported": 3.5259171486430434
+      },
+      "ratioOfMedians": {
+        "likeForLikeNative": 1.586073158247068,
+        "likeForLikePureJs": 1.1319457361719372,
+        "asReported": 3.51431927655502
+      },
+      "kemCostNative": 4.465350000000171,
+      "kemCostPureJs": 3.1211499999999432,
+      "backendCost": 16.035700000000134,
+      "spread": {
+        "xxNative": [
+          6.655099999999948,
+          10.894799999999805
+        ]
+      }
+    },
+    {
+      "pass": 2,
+      "medians": {
+        "xxNative": 6.817700000000059,
+        "xxPureJs": 20.698249999999916,
+        "hfsNative": 10.299750000000131,
+        "hfsPureJs": 24.148300000000745
+      },
+      "medianOfRatios": {
+        "likeForLikeNative": 1.5095831823432575,
+        "likeForLikePureJs": 1.1854924270682479,
+        "asReported": 3.5787223676231763
+      },
+      "ratioOfMedians": {
+        "likeForLikeNative": 1.5107367587309564,
+        "likeForLikePureJs": 1.1666831736983003,
+        "asReported": 3.5420009680684887
+      },
+      "kemCostNative": 3.482050000000072,
+      "kemCostPureJs": 3.4500500000008287,
+      "backendCost": 13.880549999999857,
+      "spread": {
+        "xxNative": [
+          6.442000000000007,
+          8.71140000000014
+        ]
+      }
+    },
+    {
+      "pass": 3,
+      "medians": {
+        "xxNative": 6.610850000000028,
+        "xxPureJs": 20.72210000000041,
+        "hfsNative": 10.271450000000186,
+        "hfsPureJs": 24.04314999999997
+      },
+      "medianOfRatios": {
+        "likeForLikeNative": 1.5419751183632533,
+        "likeForLikePureJs": 1.1749218553732825,
+        "asReported": 3.6768609255406477
+      },
+      "ratioOfMedians": {
+        "likeForLikeNative": 1.5537260715339394,
+        "likeForLikePureJs": 1.1602660927222384,
+        "asReported": 3.6369226347595043
+      },
+      "kemCostNative": 3.6606000000001586,
+      "kemCostPureJs": 3.321049999999559,
+      "backendCost": 14.111250000000382,
+      "spread": {
+        "xxNative": [
+          6.323800000000119,
+          8.908199999999852
+        ]
+      }
+    },
+    {
+      "pass": 4,
+      "medians": {
+        "xxNative": 6.494750000000749,
+        "xxPureJs": 19.971400000000358,
+        "hfsNative": 10.172150000000329,
+        "hfsPureJs": 23.64784999999938
+      },
+      "medianOfRatios": {
+        "likeForLikeNative": 1.5545856647379712,
+        "likeForLikePureJs": 1.1762732405201337,
+        "asReported": 3.6304415810689123
+      },
+      "ratioOfMedians": {
+        "likeForLikeNative": 1.5662111705607076,
+        "likeForLikePureJs": 1.1840857426118827,
+        "asReported": 3.6410716347814236
+      },
+      "kemCostNative": 3.6773999999995794,
+      "kemCostPureJs": 3.676449999999022,
+      "backendCost": 13.476649999999609,
+      "spread": {
+        "xxNative": [
+          6.205800000001545,
+          8.531000000000859
+        ]
+      }
+    },
+    {
+      "pass": 5,
+      "medians": {
+        "xxNative": 7.927700000000186,
+        "xxPureJs": 23.43594999999914,
+        "hfsNative": 12.729299999999967,
+        "hfsPureJs": 26.92435000000023
+      },
+      "medianOfRatios": {
+        "likeForLikeNative": 1.576567244270223,
+        "likeForLikePureJs": 1.1634042466939118,
+        "asReported": 3.640966751090921
+      },
+      "ratioOfMedians": {
+        "likeForLikeNative": 1.6056737767574034,
+        "likeForLikePureJs": 1.1488482438305774,
+        "asReported": 3.3962372440934443
+      },
+      "kemCostNative": 4.80159999999978,
+      "kemCostPureJs": 3.488400000001093,
+      "backendCost": 15.508249999998952,
+      "spread": {
+        "xxNative": [
+          6.643500000000131,
+          16.582800000000134
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "medians": {
+      "xxNative": 6.817700000000059,
+      "xxPureJs": 20.72210000000041,
+      "hfsNative": 10.299750000000131,
+      "hfsPureJs": 24.148300000000745
+    },
+    "medianOfRatios": {
+      "likeForLikeNative": {
+        "median": 1.5419751183632533,
+        "range": [
+          1.5095831823432575,
+          1.576567244270223
+        ]
+      },
+      "likeForLikePureJs": {
+        "median": 1.1749218553732825,
+        "range": [
+          1.1634042466939118,
+          1.1854924270682479
+        ]
+      },
+      "asReported": {
+        "median": 3.6304415810689123,
+        "range": [
+          3.5259171486430434,
+          3.6768609255406477
+        ]
+      }
+    },
+    "ratioOfMedians": {
+      "likeForLikeNative": {
+        "median": 1.5662111705607076,
+        "range": [
+          1.5107367587309564,
+          1.6056737767574034
+        ]
+      },
+      "likeForLikePureJs": {
+        "median": 1.1602660927222384,
+        "range": [
+          1.1319457361719372,
+          1.1840857426118827
+        ]
+      },
+      "asReported": {
+        "median": 3.5420009680684887,
+        "range": [
+          3.3962372440934443,
+          3.6410716347814236
+        ]
+      }
+    },
+    "kemCostNative": 3.6773999999995794,
+    "kemCostPureJs": 3.4500500000008287,
+    "backendCost": 14.111250000000382
+  }
+}
