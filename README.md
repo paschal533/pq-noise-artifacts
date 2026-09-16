@@ -9,6 +9,17 @@ The handshake adds an ephemeral KEM step, the Noise HFS tokens `e1` and `ekem1`,
 existing X25519 operations. Forward secrecy holds if **either** X25519 **or** ML-KEM-768 is
 unbroken, so classical security is preserved rather than replaced.
 
+<p align="center">
+  <img src="docs/xxhfs-handshake.svg" width="880"
+       alt="Noise XXhfs sequence: message A carries e and e1 (1,216 bytes), message B carries e, ee, ekem1, s, es (1,200 bytes), message C carries s, se (64 bytes), then encrypted transport frames on c1 and c2 in opposite directions">
+</p>
+
+Message sizes assume an empty handshake payload. The two transport frames are drawn separately
+because `split()` gives each direction its own key, and only a frame in each direction checks both
+(see [Interoperability](#interoperability)). Diagram source:
+[`docs/xxhfs-handshake.sequence.json`](docs/xxhfs-handshake.sequence.json), rendered with
+[archify](https://github.com/tt-a1i/archify).
+
 The accompanying paper is in preparation and not published anywhere yet. This repository is
 published independently so the claims can be checked now.
 
