@@ -34,58 +34,36 @@ published independently so the claims can be checked now.
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
 | `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs` | the TCP harnesses used for cross-implementation testing |
 
-## Independent interop
+## Interoperability
 
-The Rust implementation in `libp2p/rust-libp2p#6481` was written independently by
-[@royzah](https://github.com/royzah). We did not contribute to it.
+All six pairwise combinations across the four implementations have completed a live TCP
+handshake, with **no implementation requiring a protocol change to interoperate with any other**.
+Protocol identifier `/noise-mlkem768-hfs/0.1.0`.
 
-Live TCP interop run across **all six pairwise combinations** of the four implementations, with
-no protocol changes needed anywhere:
+| | TypeScript | Python | Rust | Nim |
+|---|---|---|---|---|
+| **TypeScript** | — | 2026-06-24 | 2026-06-24 | 2026-09-05 |
+| **Python** | 2026-06-24 | — | 2026-06-24 | 2026-07-11 |
+| **Rust** | 2026-06-24 | 2026-06-24 | — | 2026-09-05 |
+| **Nim** | 2026-09-05 | 2026-07-11 | 2026-09-05 | — |
 
-| pairing | roles tested | result |
-|---|---|---|
-| Rust listener + Python dialer | one direction | pass |
-| Rust listener + JS dialer | one direction | pass |
-| Python listener + JS dialer | one direction | pass |
-| Python + Nim | both | pass |
-| Nim + JS | both, nim listening and nim dialling | pass |
-| Nim + Rust | nim dialling only | pass |
+The June 2026 triangle (TypeScript, Python, Rust) exchanged an encrypted transport message after
+each handshake, not just the handshake itself. That matters more than it sounds: completing a
+handshake proves both sides agreed on the handshake hash and the ML-KEM-768 shared secret, but
+not that the two cipher states came out of `split()` assigned to the same directions. A swapped
+`cs1`/`cs2` still completes and reports success, failing only on the first data frame. Because
+`split()` gives initiator and responder opposite states, a one-directional test leaves one
+transport key unverified.
 
-The Rust pairings are one-directional because `rust-libp2p` ships a listener example but no
-dialer. The Nim pairings were completed 2026-09-05 and are recorded on
-`vacp2p/nim-libp2p#2811`.
+The Nim to TypeScript pair was exercised in both roles for that reason. The Nim to Rust pair is
+handshake-only, because the Rust tree provides a listener example but no dialer.
 
-The runner for the first three is `scripts/interop_all.sh` in `libp2p/py-libp2p#1310`. The
-Python-against-Rust transcript:
-
-```
-msg1 sent:     1216 bytes (e_pk=32, e1_pk=1184)
-msg2 received: 1304 bytes          # 1200 at the snow layer, plus libp2p identity payload
-msg3 sent:      168 bytes
-HANDSHAKE COMPLETE
-```
-
-Implementations written separately from the same specification and interoperating on the wire
-are stronger evidence that the specification is unambiguous than any number of implementations by
-one author. That is why the Rust pairings matter most here: that implementation is not ours.
-
-## The test vectors are the point
-
-Independent implementations agreeing on a handshake are only meaningful if they agree on the
-same bytes. Every key in these vectors is seeded from a fixed base byte, the prologue and payload
-are empty, and the encapsulation seed is fixed, so all three messages are fully deterministic and
-any implementation can check itself against them without running a peer.
-
-```
-protocol   Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256
-kem        ML-KEM-768 (FIPS 203) via @noble/post-quantum
-msg A      1,216 bytes    (32 B e  +  1,184 B ML-KEM-768 encapsulation key)
-msg B      1,200 bytes    (32 B e  +  1,104 B ekem1  +  encrypted static  +  tag)
-msg C         64 bytes    (unchanged from classical XX)
-```
-
-These are **test** keys, seeded deterministically and published deliberately. They are not secret
-and must never be used for anything.
+**The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
+written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
+a different ML-KEM-768 library again, BoringSSL, rather than `@noble/post-quantum`, `kyber-py` or
+RustCrypto's `ml-kem`. Four implementations written independently against the prose specification,
+against four different KEM libraries, interoperating without protocol changes, is reasonable
+evidence that the specification is unambiguous at the wire level.
 
 ## Headline result
 

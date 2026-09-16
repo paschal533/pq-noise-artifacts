@@ -36,9 +36,20 @@ So each pass measures all four cells and reports the ratios separately.
 Of the 17.3 ms separating the two default configurations, over four fifths is the backend
 substitution and only about 3.5 ms is the KEM, roughly 34% of the hybrid handshake.
 
-The native backend is the one reported because it is what a deployment would actually use, and
-because it makes the figure comparable with the Rust, Nim and Python measurements, each of which
-runs on its own optimised stack. Holding the *pure-JavaScript* backend constant on both sides
+For context across implementations of the same protocol, each with its own backend held constant:
+
+| | overhead | KEM share of the hybrid handshake |
+|---|---:|---:|
+| Python (`kyber-py`) | 10.7x | ~91% |
+| **JavaScript** (`@noble/post-quantum`) | **1.51x** | ~34% |
+| Rust (RustCrypto `ml-kem`) | 1.24x | ~19%, an upper bound |
+| Nim (BoringSSL) | 1.13x | ~8% |
+
+A lower ratio is not automatically better. Nim's is partly a larger denominator: only its KEM
+reaches BoringSSL, while its classical primitives come from BearSSL and pure Nim.
+
+The native backend is the one reported for JavaScript because it is what a deployment would
+actually use, and because it makes the figure comparable with the rows above. Holding the *pure-JavaScript* backend constant on both sides
 gives a lower ratio again, but comparing an unoptimised JavaScript stack against optimised ones
 would not be meaningful.
 
@@ -51,6 +62,11 @@ Read directly from the interoperability test vectors in `../vectors/`, consisten
 | A, initiator to responder | 32 B | **1,216 B** | +1,184 B |
 | B, responder to initiator | 96 B | **1,200 B** | +1,104 B |
 | C, initiator to responder | 64 B | **64 B** | 0 |
+| **total** | **192 B** | **2,480 B** | **+2,288 B** |
+
+Every message fits inside a standard 1,500-byte MTU: the largest, Message A at 1,216 bytes plus
+libp2p's two-byte length prefix, sits below the 1,460-byte maximum segment size. The hybrid
+handshake adds no IP fragmentation and no additional round trip.
 
 Msg A carries the 1,184-byte ML-KEM-768 encapsulation key (`e1`); msg B carries the 1,088-byte
 ciphertext plus its 16-byte AEAD tag (`ekem1`). Msg C is unchanged from classical XX.
