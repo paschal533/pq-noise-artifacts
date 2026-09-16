@@ -37,9 +37,21 @@ published independently so the claims can be checked now.
 ## Independent interop
 
 The Rust implementation in `libp2p/rust-libp2p#6481` was written independently by
-[@royzah](https://github.com/royzah). We did not contribute to it. A Python dialer speaking this
-handshake was run against its `noise_hfs_listener` binary and completed the full three-message
-handshake with mutual authentication:
+[@royzah](https://github.com/royzah). We did not contribute to it.
+
+Live TCP interop actually run, **4 of the 6 pairwise combinations**:
+
+| pairing | result |
+|---|---|
+| Rust listener + Python dialer | pass |
+| Rust listener + JS dialer | pass |
+| Python listener + JS dialer | pass |
+| Python listener + Nim dialer | pass |
+| Nim + Rust | **not run** |
+| Nim + JS | **not run** |
+
+The runner for the first three is `scripts/interop_all.sh` in `libp2p/py-libp2p#1310`; the Nim
+pairing is recorded in `vacp2p/nim-libp2p#2811`. The Python-against-Rust transcript:
 
 ```
 msg1 sent:     1216 bytes (e_pk=32, e1_pk=1184)
@@ -48,9 +60,9 @@ msg3 sent:      168 bytes
 HANDSHAKE COMPLETE
 ```
 
-Two implementations written separately from the same specification, interoperating on the wire,
-is stronger evidence that the specification is unambiguous than any number of implementations by
-one author.
+Implementations written separately from the same specification and interoperating on the wire
+are stronger evidence that the specification is unambiguous than any number of implementations by
+one author. That is why the Rust pairings matter most here: that implementation is not ours.
 
 ## The test vectors are the point
 
