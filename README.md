@@ -89,14 +89,18 @@ and must never be used for anything.
 
 ## Headline result
 
-Measured like for like, the post-quantum hybrid handshake costs **1.13x to 1.61x** a classical
-one, depending on the crypto backend. The commonly quoted ~3.5x figure compares a pure-JavaScript
-hybrid handshake against a native-backend classical one, which changes the KEM and the entire
-symmetric/DH backend at once and then attributes the whole difference to the KEM.
+Measured with the cryptographic backend held constant, the post-quantum hybrid handshake costs
+**1.51x** a classical one, per-pass range 1.51 to 1.58. Comparing the two *default*
+configurations instead gives 3.54x, but `noise()` defaults to a native backend while
+`noiseHFS()` defaults to a pure-JavaScript one, so that comparison varies the backend alongside
+the KEM. Of the 17.3 ms between the defaults, over four fifths is the backend substitution and
+about 3.5 ms is the KEM.
 
-Separately, and more usefully: **the crypto backend choice costs about four times more than adding
-ML-KEM-768** (roughly 14 ms against roughly 3.5 ms). In JavaScript, the post-quantum primitive is
-not the expensive part of a post-quantum handshake.
+For context across implementations of the same protocol, holding each one's backend constant:
+**10.7x** in Python (`kyber-py`, pure Python lattice arithmetic), **1.51x** in JavaScript,
+**1.24x** in Rust (RustCrypto `ml-kem`) and **1.13x** in Nim (BoringSSL). Three of four cluster
+between 1.1x and 1.5x. A lower ratio is not automatically better: Nim's is partly a larger
+denominator, since only its KEM reaches BoringSSL while its classical primitives do not.
 
 Full numbers, method and limitations in [`benchmarks/RESULTS.md`](benchmarks/RESULTS.md).
 

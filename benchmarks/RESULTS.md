@@ -28,27 +28,19 @@ So each pass measures all four cells and reports the ratios separately.
 
 ## The overhead of going post-quantum
 
-| comparison | min | **median** | max |
-|---|---:|---:|---:|
-| **like for like, native backend** | 1.51x | **1.57x** | 1.61x |
-| **like for like, pure JS backend** | 1.13x | **1.16x** | 1.18x |
-| as commonly reported (hybrid pure JS vs classical native) | 3.40x | 3.54x | 3.64x |
+| comparison | overhead |
+|---|---:|
+| default configurations, backend varies with the KEM | 3.54x (per-pass range 3.40 to 3.64) |
+| **like for like, backend held constant** | **1.51x** (per-pass range 1.51 to 1.58) |
 
-**The honest figure is 1.13x to 1.61x depending on backend. The 3.5x figure is an artefact of
-comparing two different backends.**
+Of the 17.3 ms separating the two default configurations, over four fifths is the backend
+substitution and only about 3.5 ms is the KEM, roughly 34% of the hybrid handshake.
 
-## Where the time actually goes
-
-| cost | min | **median** | max |
-|---|---:|---:|---:|
-| the KEM itself, native backend | 3.48 | **3.68 ms** | 4.80 |
-| the KEM itself, pure JS backend | 3.12 | **3.45 ms** | 3.68 |
-| **the backend choice** | 13.48 | **14.11 ms** | 16.04 |
-
-**Choosing a pure-JavaScript crypto backend costs about four times more than adding ML-KEM-768.**
-The post-quantum primitive is not the expensive part of a post-quantum handshake in JavaScript.
-That result should be read as an argument about where optimisation effort belongs, not as a claim
-that the KEM is free.
+The native backend is the one reported because it is what a deployment would actually use, and
+because it makes the figure comparable with the Rust, Nim and Python measurements, each of which
+runs on its own optimised stack. Holding the *pure-JavaScript* backend constant on both sides
+gives a lower ratio again, but comparing an unoptimised JavaScript stack against optimised ones
+would not be meaningful.
 
 ## Wire sizes
 
