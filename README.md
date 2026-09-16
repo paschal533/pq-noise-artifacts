@@ -2,7 +2,8 @@
 
 Interoperability test vectors, benchmarks and harnesses for
 `Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`, a post-quantum hybrid of the Noise XX
-handshake, implemented across four libp2p language ecosystems and verified interoperable.
+handshake, implemented across three libp2p language ecosystems and verified interoperable,
+including live interop against an independently written Rust implementation.
 
 The handshake adds an ephemeral KEM step, the Noise HFS tokens `e1` and `ekem1`, alongside the
 existing X25519 operations. Forward secrecy holds if **either** X25519 **or** ML-KEM-768 is
@@ -19,7 +20,7 @@ published independently so the claims can be checked now.
 | TypeScript | [`ChainSafe/js-libp2p-noise#665`](https://github.com/ChainSafe/js-libp2p-noise/pull/665) |
 | Python | [`libp2p/py-libp2p#1310`](https://github.com/libp2p/py-libp2p/pull/1310) |
 | Nim | [`vacp2p/nim-libp2p#2811`](https://github.com/vacp2p/nim-libp2p/pull/2811) |
-| Rust | branch `feat/noise-mlkem-hfs` on `paschal533/rust-libp2p` |
+| Rust | [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481), **written independently by [@royzah](https://github.com/royzah)**. Not our work; we tested against it |
 
 ## Contents
 
@@ -33,9 +34,27 @@ published independently so the claims can be checked now.
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
 | `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs` | the TCP harnesses used for cross-implementation testing |
 
+## Independent interop
+
+The Rust implementation in `libp2p/rust-libp2p#6481` was written independently by
+[@royzah](https://github.com/royzah). We did not contribute to it. A Python dialer speaking this
+handshake was run against its `noise_hfs_listener` binary and completed the full three-message
+handshake with mutual authentication:
+
+```
+msg1 sent:     1216 bytes (e_pk=32, e1_pk=1184)
+msg2 received: 1304 bytes          # 1200 at the snow layer, plus libp2p identity payload
+msg3 sent:      168 bytes
+HANDSHAKE COMPLETE
+```
+
+Two implementations written separately from the same specification, interoperating on the wire,
+is stronger evidence that the specification is unambiguous than any number of implementations by
+one author.
+
 ## The test vectors are the point
 
-Four independent implementations agreeing on a handshake is only meaningful if they agree on the
+Independent implementations agreeing on a handshake are only meaningful if they agree on the
 same bytes. Every key in these vectors is seeded from a fixed base byte, the prologue and payload
 are empty, and the encapsulation seed is fixed, so all three messages are fully deterministic and
 any implementation can check itself against them without running a peer.
