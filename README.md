@@ -2,8 +2,8 @@
 
 Interoperability test vectors, benchmarks and harnesses for
 `Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`, a post-quantum hybrid of the Noise XX
-handshake, implemented across three libp2p language ecosystems and verified interoperable,
-including live interop against an independently written Rust implementation.
+handshake, implemented across three libp2p language ecosystems and verified interoperable across
+all six pairwise combinations with a fourth, independently written Rust implementation.
 
 The handshake adds an ephemeral KEM step, the Noise HFS tokens `e1` and `ekem1`, alongside the
 existing X25519 operations. Forward secrecy holds if **either** X25519 **or** ML-KEM-768 is
@@ -39,19 +39,24 @@ published independently so the claims can be checked now.
 The Rust implementation in `libp2p/rust-libp2p#6481` was written independently by
 [@royzah](https://github.com/royzah). We did not contribute to it.
 
-Live TCP interop actually run, **4 of the 6 pairwise combinations**:
+Live TCP interop run across **all six pairwise combinations** of the four implementations, with
+no protocol changes needed anywhere:
 
-| pairing | result |
-|---|---|
-| Rust listener + Python dialer | pass |
-| Rust listener + JS dialer | pass |
-| Python listener + JS dialer | pass |
-| Python listener + Nim dialer | pass |
-| Nim + Rust | **not run** |
-| Nim + JS | **not run** |
+| pairing | roles tested | result |
+|---|---|---|
+| Rust listener + Python dialer | one direction | pass |
+| Rust listener + JS dialer | one direction | pass |
+| Python listener + JS dialer | one direction | pass |
+| Python + Nim | both | pass |
+| Nim + JS | both, nim listening and nim dialling | pass |
+| Nim + Rust | nim dialling only | pass |
 
-The runner for the first three is `scripts/interop_all.sh` in `libp2p/py-libp2p#1310`; the Nim
-pairing is recorded in `vacp2p/nim-libp2p#2811`. The Python-against-Rust transcript:
+The Rust pairings are one-directional because `rust-libp2p` ships a listener example but no
+dialer. The Nim pairings were completed 2026-09-05 and are recorded on
+`vacp2p/nim-libp2p#2811`.
+
+The runner for the first three is `scripts/interop_all.sh` in `libp2p/py-libp2p#1310`. The
+Python-against-Rust transcript:
 
 ```
 msg1 sent:     1216 bytes (e_pk=32, e1_pk=1184)
