@@ -106,7 +106,8 @@ trap cleanup EXIT INT TERM
 {
   echo "date_utc $(date -u +%FT%TZ)"
   for d in JS_DIR PY_DIR NIM_DIR RUST_DIR; do
-    echo "$d ${!d} $(git -C "${!d}" rev-parse HEAD 2>/dev/null) $(git -C "${!d}" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
+    dir="${!d}"
+    echo "$d $dir $(git -C "$dir" rev-parse HEAD 2>/dev/null) $(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
   done
   node -v; "$PYTHON" --version; nim -v 2>/dev/null | head -1; rustc --version
 } > "$OUT/versions.txt" 2>&1
