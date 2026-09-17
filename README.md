@@ -53,8 +53,8 @@ are unchanged.
 | `benchmarks/paired-passes-results.json` | raw output |
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
 | `interop/run-matrix.sh` | the neutral runner for the bidirectional interop matrix |
-| `interop/results/20260917T015709Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs |
-| `interop/negative-controls/20260917/` | two negative controls showing the matrix checks can fail |
+| `interop/results/20260917T102958Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs |
+| `interop/negative-controls/20260917T102958Z/`, `interop/negative-controls/20260917/` | two negative controls showing the matrix checks can fail (control A re-run with the matrix run above in the first; control B in the second) |
 | `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs`, `interop/interop-io.mjs` | reference copies of the TypeScript harnesses (the runner uses the JS repository's own copies) |
 
 ## Interoperability
@@ -71,7 +71,7 @@ with any other**.
 | **Nim** | 3/3 | 3/3 | 3/3 | 3/3 |
 | **Rust** | 3/3 | 3/3 | 3/3 | 3/3 |
 
-Run directory: [`interop/results/20260917T015709Z/`](interop/results/20260917T015709Z/). Runner:
+Run directory: [`interop/results/20260917T102958Z/`](interop/results/20260917T102958Z/). Runner:
 [`interop/run-matrix.sh`](interop/run-matrix.sh). Every harness follows one stdout contract
 (`READY <port>` for listeners, then `LOCAL <peer-id>`, `PEER <peer-id>`,
 `SENT hello from <Impl>`, `RECV <line>`, and `INTEROP_OK` last). A run passes only if:
@@ -91,13 +91,13 @@ success, failing only on the first data frame. Because `split()` gives initiator
 opposite states, a one-directional test leaves one transport key unverified, so every run here
 sends one message each way, and every pair runs in both orderings.
 
-Implementations tested (from `versions.txt`): JS `236525e`, Python `47c8f99b`, Nim `f9c959b`,
-Rust `cd0b0d9` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier (c2e4e30)). Node.js v22.17.1, Python 3.13.14,
+Implementations tested (from `versions.txt`): JS `c8a07cf`, Python `8e12d013`, Nim `eeff625`,
+Rust `b68fe10` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier (c2e4e30)). Node.js v22.17.1, Python 3.13.14,
 Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 machine. The
 harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
 so the run checks the handshake and transport encryption, not negotiation of the protocol id.
 
-**Negative controls** ([`interop/negative-controls/20260917/`](interop/negative-controls/20260917/)).
+**Negative controls** (control A: [`interop/negative-controls/20260917T102958Z/`](interop/negative-controls/20260917T102958Z/); control B: [`interop/negative-controls/20260917/`](interop/negative-controls/20260917/)).
 With the TypeScript implementation rebuilt under the old hyphenated name and nothing else changed,
 all six orderings against Python, Nim and Rust failed with AEAD tag or decryption errors while the
 dialer read message B, and the same-implementation pairs passed. With a TypeScript dialer that
