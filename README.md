@@ -1,9 +1,9 @@
 # Post-quantum Noise for libp2p, artifacts
 
 Interoperability test vectors, benchmarks and harnesses for
-`Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`, a post-quantum hybrid of the Noise XX
-handshake, implemented across three libp2p language ecosystems and verified interoperable across
-all six pairwise combinations with a fourth, independently written Rust implementation.
+`Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`, a post-quantum hybrid of the Noise XX
+handshake, implemented across three libp2p language ecosystems and verified interoperable, in
+both directions, with each other and with a fourth, independently written Rust implementation.
 
 The handshake adds an ephemeral KEM step, the Noise HFS tokens `e1` and `ekem1`, alongside the
 existing X25519 operations. Forward secrecy holds if **either** X25519 **or** ML-KEM-768 is
@@ -23,6 +23,14 @@ because `split()` gives each direction its own key, and only a frame in each dir
 The accompanying paper is in preparation and not published anywhere yet. This repository is
 published independently so the claims can be checked now.
 
+**Name change.** Earlier versions of this profile were called
+`Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`. Noise (revision 34, §8.2) allows only
+alphanumeric characters and `/` in an algorithm name, so the profile is now
+`Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`; [@royzah](https://github.com/royzah) spotted it.
+The name is hashed into the handshake, so the two are not wire-compatible, and the protocol
+identifier moved from `/noise-mlkem768-hfs/0.1.0` to `/noise-mlkem768-hfs/0.2.0`. Message sizes
+are unchanged.
+
 ## The work
 
 | | where |
@@ -32,6 +40,7 @@ published independently so the claims can be checked now.
 | Python | [`libp2p/py-libp2p#1310`](https://github.com/libp2p/py-libp2p/pull/1310) |
 | Nim | [`vacp2p/nim-libp2p#2811`](https://github.com/vacp2p/nim-libp2p/pull/2811) |
 | Rust | [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481), **written independently by [@royzah](https://github.com/royzah)**. Not our work; we tested against it |
+| Rust interop harness | [`royzah/rust-libp2p#1`](https://github.com/royzah/rust-libp2p/pull/1): our listener and dialer examples and benchmarks, on top of #6481 |
 
 ## Contents
 
@@ -43,31 +52,64 @@ published independently so the claims can be checked now.
 | `benchmarks/paired-passes.mjs` | the benchmark, 5 passes x 30 iterations, all four backend/KEM cells |
 | `benchmarks/paired-passes-results.json` | raw output |
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
-| `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs` | the TCP harnesses used for cross-implementation testing |
+| `interop/run-matrix.sh` | the neutral runner for the bidirectional interop matrix |
+| `interop/results/20260917T015709Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs |
+| `interop/negative-controls/20260917/` | two negative controls showing the matrix checks can fail |
+| `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs`, `interop/interop-io.mjs` | reference copies of the TypeScript harnesses (the runner uses the JS repository's own copies) |
 
 ## Interoperability
 
-All six pairwise combinations across the four implementations have completed a live TCP
-handshake, with **no implementation requiring a protocol change to interoperate with any other**.
-Protocol identifier `/noise-mlkem768-hfs/0.1.0`.
+Protocol identifier `/noise-mlkem768-hfs/0.2.0`. Every ordered pairing of the four
+implementations, including each against itself, was run three times on 2026-09-17:
+**48 runs, 48 passed**, with **no implementation requiring a protocol change to interoperate
+with any other**.
 
-| | TypeScript | Python | Rust | Nim |
+| listener \ dialer | JS | Python | Nim | Rust |
 |---|---|---|---|---|
-| **TypeScript** | — | 2026-06-24 | 2026-06-24 | 2026-09-05 |
-| **Python** | 2026-06-24 | — | 2026-06-24 | 2026-07-11 |
-| **Rust** | 2026-06-24 | 2026-06-24 | — | 2026-09-05 |
-| **Nim** | 2026-09-05 | 2026-07-11 | 2026-09-05 | — |
+| **JS** | 3/3 | 3/3 | 3/3 | 3/3 |
+| **Python** | 3/3 | 3/3 | 3/3 | 3/3 |
+| **Nim** | 3/3 | 3/3 | 3/3 | 3/3 |
+| **Rust** | 3/3 | 3/3 | 3/3 | 3/3 |
 
-The June 2026 triangle (TypeScript, Python, Rust) exchanged an encrypted transport message after
-each handshake, not just the handshake itself. That matters more than it sounds: completing a
-handshake proves both sides agreed on the handshake hash and the ML-KEM-768 shared secret, but
-not that the two cipher states came out of `split()` assigned to the same directions. A swapped
-`cs1`/`cs2` still completes and reports success, failing only on the first data frame. Because
-`split()` gives initiator and responder opposite states, a one-directional test leaves one
-transport key unverified.
+Run directory: [`interop/results/20260917T015709Z/`](interop/results/20260917T015709Z/). Runner:
+[`interop/run-matrix.sh`](interop/run-matrix.sh). Every harness follows one stdout contract
+(`READY <port>` for listeners, then `LOCAL <peer-id>`, `PEER <peer-id>`,
+`SENT hello from <Impl>`, `RECV <line>`, and `INTEROP_OK` last). A run passes only if:
 
-The Nim to TypeScript pair was exercised in both roles for that reason. The Nim to Rust pair is
-handshake-only, because the Rust tree provides a listener example but no dialer.
+- both processes exit 0 and print `INTEROP_OK`;
+- the listener's `PEER` equals the dialer's `LOCAL` and the dialer's `PEER` equals the listener's
+  `LOCAL`, so each side authenticated the other's real identity and both derived the same
+  handshake hash;
+- the listener sends `hello from <Impl>` as an encrypted transport message, the dialer decrypts it
+  and replies in kind, and each side's `RECV` line names the other implementation.
+
+That last check matters more than it sounds. Completing a handshake proves both sides agreed on
+the handshake hash and the ML-KEM-768 shared secret, but not that the two cipher states came out
+of `split()` assigned to the same directions. A swapped `cs1`/`cs2` still completes and reports
+success, failing only on the first data frame. Because `split()` gives initiator and responder
+opposite states, a one-directional test leaves one transport key unverified, so every run here
+sends one message each way, and every pair runs in both orderings.
+
+Implementations tested (from `versions.txt`): JS `236525e`, Python `47c8f99b`, Nim `f9c959b`,
+Rust `cd0b0d9` (royzah's `a648280` plus our harness commits). Node.js v22.17.1, Python 3.13.14,
+Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 machine. The
+harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
+so the run checks the handshake and transport encryption, not negotiation of the protocol id.
+
+**Negative controls** ([`interop/negative-controls/20260917/`](interop/negative-controls/20260917/)).
+With the TypeScript implementation rebuilt under the old hyphenated name and nothing else changed,
+all six orderings against Python, Nim and Rust failed with AEAD tag or decryption errors while the
+dialer read message B, and the same-implementation pairs passed. With a TypeScript dialer that
+printed a fake `LOCAL` identity, the handshake and both messages completed and the identity
+cross-check caught it.
+
+**Earlier claims, corrected.** A previous version of this README showed a pairwise table dated
+June to September 2026 and said the June 2026 triangle (TypeScript, Python, Rust) had exchanged an
+encrypted transport message after each handshake. It had not. The runner used then counted a pair
+as passing when the dialer exited cleanly and printed a peer identity, and no transport frames were
+exchanged; the Python dialer was also a standalone re-implementation rather than py-libp2p. The
+previous version also said the Rust tree provided a listener example but no dialer. That listener
+was ours, from `royzah/rust-libp2p#1`, not part of #6481. The matrix above replaces those claims.
 
 **The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
 written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
@@ -91,15 +133,9 @@ For context across implementations of the same protocol, holding each one's back
 between 1.1x and 1.5x. A lower ratio is not automatically better: Nim's is partly a larger
 denominator, since only its KEM reaches BoringSSL while its classical primitives do not.
 
-Full numbers, method and limitations in [`benchmarks/RESULTS.md`](benchmarks/RESULTS.md).
-
-## A note on what is current
-
-The implementation migrated from X-Wing to raw ML-KEM-768. Everything in this repository reflects
-that. If you are reading `NOISE_HFS_SPEC.md` or `benchmarks/results.md` inside the TypeScript PR,
-note that both still describe the earlier X-Wing design and its wire sizes (1,248 / 1,232 / 64).
-The current sizes are 1,216 / 1,200 / 64, which the vectors here demonstrate and
-[`libp2p/specs#716`](https://github.com/libp2p/specs/pull/716) specifies.
+These are the figures the paper reports, from its September 2026 measurement sessions.
+[`benchmarks/RESULTS.md`](benchmarks/RESULTS.md) reports a 2026-09-17 re-run on the renamed
+suite, whose absolute latencies are not comparable with the published figures.
 
 ## Licence
 

@@ -1,0 +1,5 @@
+listener	dialer	rep	result	reasons
+JS	JS	1	PASS	-
+JS	Nim	1	FAIL	dialer_exit=1 listener_exit=1 listener_no_INTEROP_OK dialer_no_INTEROP_OK listener_PEER!=dialer_LOCAL dialer_PEER!=listener_LOCAL dialer_RECV_mismatch listener_RECV_mismatch 
+Nim	JS	1	FAIL	dialer_exit=1 listener_exit=1 listener_no_INTEROP_OK dialer_no_INTEROP_OK listener_PEER!=dialer_LOCAL dialer_PEER!=listener_LOCAL dialer_RECV_mismatch listener_RECV_mismatch 
+Nim	Nim	1	PASS	-

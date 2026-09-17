@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /**
- * Deterministic test vector generator for Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256.
+ * Deterministic test vector generator for Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256.
  *
  * Generates NUM_VECTORS test vectors using seeded key generation so vectors
  * are reproducible across runs. Writes to test/fixtures/pqc-test-vectors.json.
@@ -187,7 +187,7 @@ for (let i = 1; i <= NUM_VECTORS; i++) {
 
 const output = {
   protocol: NOISE_HFS_PROTOCOL_NAME,
-  description: 'Deterministic test vectors for Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256. All keypairs seeded for reproducibility. Do NOT use seeded keys in production.',
+  description: 'Deterministic test vectors for Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256. All keypairs seeded for reproducibility. Do NOT use seeded keys in production.',
   generated_by: '@chainsafe/libp2p-noise (js-libp2p-noise)',
   kem: 'ML-KEM-768 (FIPS 203) via @noble/post-quantum',
   prologue: 'empty (0 bytes)',
