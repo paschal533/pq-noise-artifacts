@@ -86,7 +86,8 @@ comparing an unoptimised JavaScript stack against optimised ones would not be me
 
 ## Previously published figures (not directly comparable)
 
-Published values, their statistics and their line numbers are from `research-paper.md`. Each
+Published values, their statistics and their line numbers are from `research-paper.md`; the line
+numbers refer to its 14 September 2026 draft and differ in later versions. Each
 statistic is quoted in the paper's own words, or given as "as published" where the paper does not
 name one. The "This run" columns are filled only for absolute handshake latencies; this run's
 overhead and KEM-share figures are in the tables above and are not repeated beside the published
@@ -118,8 +119,8 @@ the corresponding figure from this run. The paper itself states that "absolute l
 comparable between the two sessions" and that "this machine ran roughly twice as fast on 10
 September as on 8 September, which is well within the drift documented below"
 (research-paper.md:651). The paper's "Paired sampling" row reads "no" for Python (:892); this
-run's Python harness, as revised in this task's Step 1, interleaves the classical and hybrid
-handshakes per iteration.
+run's Python harness, as revised shortly before this session (py-libp2p `2ffbe408`), interleaves
+the classical and hybrid handshakes per iteration.
 
 ## Wire sizes
 

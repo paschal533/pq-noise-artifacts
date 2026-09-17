@@ -24,7 +24,7 @@ either beyond this run.
 | Language | KEM library | Classical (ms, median of pass medians) | Hybrid (ms, median of pass medians) | Overhead, median | Overhead, range (min-max across passes) | Passes x iterations | Sampling |
 |---|---|---:|---:|---:|---:|---|---|
 | JavaScript | `@noble/post-quantum` 0.6.0 | 15.40 | 24.10 | 1.56x | 1.51-1.60x | 5 x 30 | Per-iteration paired (both protocols interleaved, order rotated each iteration), backend held constant (native); per-pass value is the median of the 30 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
-| Python | `kyber-py` 1.2.0 (pure Python) | 3.35 | 40.08 | 12.0x | 11.3-12.4x | 5 x 50 | Per-iteration interleaved as of this task's Step 1 (alternating which protocol runs first each iteration, fresh keys per handshake); per-pass value is the median of the 50 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
+| Python | `kyber-py` 1.2.0 (pure Python) | 3.35 | 40.08 | 12.0x | 11.3-12.4x | 5 x 50 | Per-iteration interleaved since py-libp2p `2ffbe408`, committed shortly before this session (alternating which protocol runs first each iteration, fresh keys per handshake); per-pass value is the median of the 50 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
 | Nim | BoringSSL (via nim-libp2p) | 3.67 | 4.36 | 1.19x | 1.16-1.21x | 5 x 500 | Per-iteration interleaved (existing harness: classical handshake then hybrid handshake each iteration). The harness's own "overhead from paired difference" line (1 + median per-iteration difference / classical median) gives 1.190, 1.189, 1.144, 1.132, 1.174 across the 5 passes. The table's headline ratio is the ratio of the pass's hybrid median to its classical median, medianed and ranged over the 5 passes. |
 | Rust | RustCrypto `ml-kem` | 1.57 | 1.96 | 1.32x | 1.23-1.61x | 5 passes; 100 criterion samples per bench per pass | Pass-level only, not interleaved: each pass is one `cargo bench` process that runs the classical bench, then the hybrid bench, sequentially within that process. Sampling mode appears to have varied by pass (passes 1-2 inferred Flat, passes 3-4 inferred Linear, pass 5 confirmed Linear) -- see Anomalies. Classical and hybrid figures above are `estimates.json` medians (field `median.point_estimate`) via `rust-passes.tsv`; the table reports the median and range of the 5 pass-level ratios computed from those medians. |
 
@@ -67,7 +67,8 @@ quantity from the delta-method figures in the table.
 
 ## Previously published figures (not directly comparable)
 
-Published values, their statistics and their line numbers are from `research-paper.md`. Each
+Published values, their statistics and their line numbers are from `research-paper.md`; the line
+numbers refer to its 14 September 2026 draft and differ in later versions. Each
 statistic is quoted in the paper's own words, or given as "as published" where the paper does not
 name one. The "This run" columns are filled only for absolute handshake latencies; this run's
 overhead and KEM-share figures are in the tables above and are not repeated beside the published
@@ -99,12 +100,12 @@ the corresponding figure from this run. The paper itself states that "absolute l
 comparable between the two sessions" and that "this machine ran roughly twice as fast on 10
 September as on 8 September, which is well within the drift documented below"
 (research-paper.md:651). The paper's "Paired sampling" row reads "no" for Python (:892); this
-run's Python harness, as revised in this task's Step 1, interleaves the classical and hybrid
-handshakes per iteration.
+run's Python harness, as revised shortly before this session (py-libp2p `2ffbe408`), interleaves
+the classical and hybrid handshakes per iteration.
 
 ## Anomalies and notes
 
-- **Rust confirmation run discarded.** Before Step 4, one `cargo bench ... handshake` run was
+- **Rust confirmation run discarded.** Before the five measured passes, one `cargo bench ... handshake` run was
   executed to confirm the `target/criterion/<bench-name>/new/estimates.json` paths used by
   `run-rust-passes.sh` (confirmed: `noise_xx_classical_handshake` and
   `noise_xxhfs_mlkem768_handshake`, exactly as written in the script -- no path changes needed).
@@ -114,7 +115,7 @@ handshakes per iteration.
   five official passes ran with nothing else executing concurrently.
 - **All 16 handshake-benchmark invocations exited 0** (JS 1 process running 5 internal passes,
   Python 5 separate process invocations, Nim 5, Rust 5). No ratio in any raw file was below 1.0x,
-  so no re-run was needed under this task's re-run policy.
+  so no pass was re-run.
 - **Rust sampling mode, what is verified versus inferred.** `run-rust-passes.sh` runs one `cargo
   bench` invocation per pass; criterion writes each invocation's data to
   `target/criterion/<bench>/new/` and is expected to move the previous invocation's data to

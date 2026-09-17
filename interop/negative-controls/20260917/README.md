@@ -47,7 +47,7 @@ subdirectory holds the runner's `matrix.md`, `results.tsv`, `versions.txt` and p
 
 **Observed.** `bd.log` (dialer) and `bl.log` (listener): both sides printed `INTEROP_OK`, and both
 `RECV` lines were `hello from JS`. The dialer's `LOCAL` did not match the listener's
-`PEER 12D3KooWMYbF8gQ11mcdjtXuqvYmxpVNPof9Ka3xoPg4FFGy7Prr`, and the cross-check reported the
+`PEER 12D3KooWMYbF8gQ11mcdjtXuqvYmxpVNPof9Ka3xoPg4FFGy7Prr`, and comparing the two logs shows the
 mismatch.
 
 ## Not included

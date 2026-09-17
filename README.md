@@ -92,7 +92,7 @@ opposite states, a one-directional test leaves one transport key unverified, so 
 sends one message each way, and every pair runs in both orderings.
 
 Implementations tested (from `versions.txt`): JS `a183009`, Python `cea85ba7`, Nim `2b8efb5`,
-Rust `00d7765` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier (c2e4e30)). Node.js v22.17.1, Python 3.13.14,
+Rust `00d7765` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier, `c2e4e30`). Node.js v22.17.1, Python 3.13.14,
 Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 machine. The
 harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
 so the run checks the handshake and transport encryption, not negotiation of the protocol id.
