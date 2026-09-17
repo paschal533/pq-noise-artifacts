@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Reference copy of js-libp2p-noise/scripts/noise-hfs-dial.mjs at commit
- * c8a07cf (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
+ * a183009 (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
  * reference only; run-matrix.sh invokes the JS repo's own copy via JS_DIR,
  * not this file. Run from inside js-libp2p-noise (or a worktree of it), not
  * from pq-noise-artifacts.
