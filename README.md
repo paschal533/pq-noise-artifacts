@@ -97,7 +97,7 @@ Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 mach
 harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
 so the run checks the handshake and transport encryption, not negotiation of the protocol id.
 
-**Negative controls** (control A: [`interop/negative-controls/20260917T102958Z/`](interop/negative-controls/20260917T102958Z/); control B: [`interop/negative-controls/20260917/`](interop/negative-controls/20260917/)).
+**Negative controls** (control A: [`interop/negative-controls/20260917T102958Z/`](interop/negative-controls/20260917T102958Z/); control B, from the earlier run `20260917T015709Z`: [`interop/negative-controls/20260917/`](interop/negative-controls/20260917/)).
 With the TypeScript implementation rebuilt under the old hyphenated name and nothing else changed,
 all six orderings against Python, Nim and Rust failed with AEAD tag or decryption errors while the
 dialer read message B, and the same-implementation pairs passed. With a TypeScript dialer that
@@ -114,9 +114,9 @@ previous version also said the Rust tree provided a listener example but no dial
 was ours, from `royzah/rust-libp2p#1`, not part of #6481. Those earlier Rust runs also predate
 royzah's current code: they used our `royzah/rust-libp2p#1` branch, whose `Cargo.lock` pins
 `royzah/snow` at commit `407dd90` of 14 June 2026, which still spelled the suite `ML-KEM-768`.
-royzah renamed it to `MLKEM768` on 17 August 2026 (rust-libp2p `e7a1286`, snow `858dc27`), and that
-change reached #6481 only with the force-push of 16 September 2026. The matrix above replaces those
-claims.
+royzah renamed it to `MLKEM768` on 17 August 2026 (snow `858dc27`; rust-libp2p `1ae21ce`, later
+rebased as `e7a1286`), and the rename was on the #6481 branch by 22 August 2026 at the latest, so the
+5 September run was already behind the pull request. The matrix above replaces those claims.
 
 **The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
 written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
