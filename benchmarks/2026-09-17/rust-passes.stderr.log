@@ -1,0 +1,143 @@
+    Finished `bench` profile [optimized] target(s) in 31.24s
+     Running benches\noise_hfs.rs (target\release\deps\noise_hfs-49ae4995260863ed.exe)
+Gnuplot not found, using plotters backend
+Benchmarking noise_xx_classical_handshake
+Benchmarking noise_xx_classical_handshake: Warming up for 3.0000 s
+Benchmarking noise_xx_classical_handshake: Collecting 100 samples in estimated 5.0553 s (2400 iterations)
+Benchmarking noise_xx_classical_handshake: Analyzing
+noise_xx_classical_handshake
+                        time:   [2.0435 ms 2.2020 ms 2.3771 ms]
+                        change: [+0.5888% +12.213% +24.290%] (p = 0.04 < 0.05)
+                        Change within noise threshold.
+Found 5 outliers among 100 measurements (5.00%)
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking noise_xxhfs_mlkem768_handshake
+Benchmarking noise_xxhfs_mlkem768_handshake: Warming up for 3.0000 s
+Benchmarking noise_xxhfs_mlkem768_handshake: Collecting 100 samples in estimated 5.0124 s (2000 iterations)
+Benchmarking noise_xxhfs_mlkem768_handshake: Analyzing
+noise_xxhfs_mlkem768_handshake
+                        time:   [3.0880 ms 3.2324 ms 3.3931 ms]
+                        change: [−33.132% −25.861% −17.320%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+
+    Finished `bench` profile [optimized] target(s) in 1.02s
+     Running benches\noise_hfs.rs (target\release\deps\noise_hfs-49ae4995260863ed.exe)
+Gnuplot not found, using plotters backend
+Benchmarking noise_xx_classical_handshake
+Benchmarking noise_xx_classical_handshake: Warming up for 3.0000 s
+Benchmarking noise_xx_classical_handshake: Collecting 100 samples in estimated 5.1219 s (2000 iterations)
+Benchmarking noise_xx_classical_handshake: Analyzing
+noise_xx_classical_handshake
+                        time:   [1.7099 ms 1.7788 ms 1.8512 ms]
+                        change: [−25.870% −19.217% −12.148%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 9 outliers among 100 measurements (9.00%)
+  6 (6.00%) low mild
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+Benchmarking noise_xxhfs_mlkem768_handshake
+Benchmarking noise_xxhfs_mlkem768_handshake: Warming up for 3.0000 s
+Benchmarking noise_xxhfs_mlkem768_handshake: Collecting 100 samples in estimated 5.1512 s (1800 iterations)
+Benchmarking noise_xxhfs_mlkem768_handshake: Analyzing
+noise_xxhfs_mlkem768_handshake
+                        time:   [3.1944 ms 3.4594 ms 3.7633 ms]
+                        change: [−2.3134% +7.0234% +17.817%] (p = 0.17 > 0.05)
+                        No change in performance detected.
+Found 17 outliers among 100 measurements (17.00%)
+  5 (5.00%) high mild
+  12 (12.00%) high severe
+
+    Finished `bench` profile [optimized] target(s) in 1.43s
+     Running benches\noise_hfs.rs (target\release\deps\noise_hfs-49ae4995260863ed.exe)
+Gnuplot not found, using plotters backend
+Benchmarking noise_xx_classical_handshake
+Benchmarking noise_xx_classical_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.2s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xx_classical_handshake: Collecting 100 samples in estimated 8.2478 s (5050 iterations)
+Benchmarking noise_xx_classical_handshake: Analyzing
+noise_xx_classical_handshake
+                        time:   [1.4347 ms 1.4886 ms 1.5462 ms]
+                        change: [−21.163% −17.180% −12.647%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking noise_xxhfs_mlkem768_handshake
+Benchmarking noise_xxhfs_mlkem768_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.7s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xxhfs_mlkem768_handshake: Collecting 100 samples in estimated 9.6609 s (5050 iterations)
+Benchmarking noise_xxhfs_mlkem768_handshake: Analyzing
+noise_xxhfs_mlkem768_handshake
+                        time:   [1.8468 ms 1.9713 ms 2.1124 ms]
+                        change: [−51.446% −46.781% −41.925%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+
+    Finished `bench` profile [optimized] target(s) in 0.73s
+     Running benches\noise_hfs.rs (target\release\deps\noise_hfs-49ae4995260863ed.exe)
+Gnuplot not found, using plotters backend
+Benchmarking noise_xx_classical_handshake
+Benchmarking noise_xx_classical_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.0s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xx_classical_handshake: Collecting 100 samples in estimated 7.0309 s (5050 iterations)
+Benchmarking noise_xx_classical_handshake: Analyzing
+noise_xx_classical_handshake
+                        time:   [1.4100 ms 1.4590 ms 1.5093 ms]
+                        change: [+2.1869% +7.3942% +13.184%] (p = 0.01 < 0.05)
+                        Performance has regressed.
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking noise_xxhfs_mlkem768_handshake
+Benchmarking noise_xxhfs_mlkem768_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.9s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xxhfs_mlkem768_handshake: Collecting 100 samples in estimated 9.8534 s (5050 iterations)
+Benchmarking noise_xxhfs_mlkem768_handshake: Analyzing
+noise_xxhfs_mlkem768_handshake
+                        time:   [1.8167 ms 1.8709 ms 1.9266 ms]
+                        change: [−1.1866% +3.2941% +7.9080%] (p = 0.16 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  2 (2.00%) low severe
+  10 (10.00%) low mild
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+    Finished `bench` profile [optimized] target(s) in 0.67s
+     Running benches\noise_hfs.rs (target\release\deps\noise_hfs-49ae4995260863ed.exe)
+Gnuplot not found, using plotters backend
+Benchmarking noise_xx_classical_handshake
+Benchmarking noise_xx_classical_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.3s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xx_classical_handshake: Collecting 100 samples in estimated 7.3300 s (5050 iterations)
+Benchmarking noise_xx_classical_handshake: Analyzing
+noise_xx_classical_handshake
+                        time:   [1.3675 ms 1.4128 ms 1.4587 ms]
+                        change: [−10.179% −5.4558% −0.8352%] (p = 0.03 < 0.05)
+                        Change within noise threshold.
+
+Benchmarking noise_xxhfs_mlkem768_handshake
+Benchmarking noise_xxhfs_mlkem768_handshake: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.9s, enable flat sampling, or reduce sample count to 50.
+Benchmarking noise_xxhfs_mlkem768_handshake: Collecting 100 samples in estimated 8.9489 s (5050 iterations)
+Benchmarking noise_xxhfs_mlkem768_handshake: Analyzing
+noise_xxhfs_mlkem768_handshake
+                        time:   [1.8375 ms 1.8904 ms 1.9397 ms]
+                        change: [−4.0353% −0.6236% +2.9544%] (p = 0.72 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
