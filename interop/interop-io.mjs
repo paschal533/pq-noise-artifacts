@@ -1,19 +1,25 @@
 /**
  * Reference copy of js-libp2p-noise/scripts/interop-io.mjs at commit
- * 236525e (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
+ * c8a07cf (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
  * reference only — run-matrix.sh invokes the JS repo's own copy via JS_DIR,
  * not this file. Run from inside js-libp2p-noise (or a worktree of it), not
  * from pq-noise-artifacts.
  */
 /**
- * Shared pieces of the cross-implementation interop harness: a TCP socket
- * adapter, port parsing, and the one-line greeting exchange every
- * implementation's harness speaks (listener sends first).
+ * Shared pieces of the cross-implementation interop harness: NoiseHFS setup,
+ * a TCP socket adapter, port parsing, and the one-line greeting exchange
+ * every implementation's harness speaks (listener sends first).
  */
+import { defaultLogger } from '@libp2p/logger'
 import { AbstractMultiaddrConnection } from '@libp2p/utils'
+import { NoiseHFS } from '../dist/src/noise-hfs.js'
 
 export const IMPL = 'JS'
 export const GREETING_PREFIX = 'hello from '
+
+export function createNoiseHFS (privateKey, peerId) {
+  return new NoiseHFS({ privateKey, peerId, logger: defaultLogger(), upgrader: { getStreamMuxers: () => new Map() } })
+}
 
 export class TCPSocketConnection extends AbstractMultiaddrConnection {
   #socket
@@ -61,6 +67,7 @@ export function parsePort (argv, fallback) {
   if (i >= 0 && argv[i + 1] === undefined) throw new Error('--port requires a value')
   const raw = i >= 0 ? argv[i + 1] : argv.find(a => /^\d+$/.test(a))
   if (raw === undefined) return fallback
+  if (!/^\d+$/.test(raw)) throw new Error(`invalid port ${raw}`)
   const port = Number.parseInt(raw, 10)
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(`invalid port ${raw}`)
   return port
@@ -72,9 +79,10 @@ export async function sendGreeting (connection) {
 }
 
 export async function readGreeting (connection) {
+  const decoder = new TextDecoder()
   let text = ''
   for await (const chunk of connection) {
-    text += new TextDecoder().decode(chunk instanceof Uint8Array ? chunk : chunk.subarray())
+    text += decoder.decode(chunk instanceof Uint8Array ? chunk : chunk.subarray(), { stream: true })
     const nl = text.indexOf('\n')
     if (nl >= 0) {
       const line = text.slice(0, nl)
@@ -88,7 +96,14 @@ export async function readGreeting (connection) {
   throw new Error('connection closed before a greeting arrived')
 }
 
+// process.exit() straight after a write can drop output still buffered for a
+// pipe, so exit only from the callback of a final empty write to each stream.
+export function exitAfterFlush (code) {
+  process.exitCode = code
+  process.stdout.write('', () => process.stderr.write('', () => process.exit(code)))
+}
+
 export function fail (err) {
   process.stderr.write(`ERROR ${err?.message ?? err}\n`)
-  process.exit(1)
+  exitAfterFlush(1)
 }

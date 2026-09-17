@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Reference copy of js-libp2p-noise/scripts/noise-hfs-dial.mjs at commit
- * 236525e (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
+ * c8a07cf (branch js-mlkem768-rename, worktree wt-js-rename). Kept here for
  * reference only — run-matrix.sh invokes the JS repo's own copy via JS_DIR,
  * not this file. Run from inside js-libp2p-noise (or a worktree of it), not
  * from pq-noise-artifacts.
@@ -19,14 +19,13 @@ import { defaultLogger } from '@libp2p/logger'
 import { peerIdFromPrivateKey } from '@libp2p/peer-id'
 import { ipPortToMultiaddr } from '@libp2p/utils'
 import { multiaddr } from '@multiformats/multiaddr'
-import { NoiseHFS } from '../dist/src/noise-hfs.js'
-import { TCPSocketConnection, parsePort, sendGreeting, readGreeting, fail } from './interop-io.mjs'
+import { TCPSocketConnection, parsePort, createNoiseHFS, sendGreeting, readGreeting, fail, exitAfterFlush } from './interop-io.mjs'
 
 async function main () {
   const PORT = parsePort(process.argv.slice(2), 9999)
   const privateKey = await generateKeyPair('Ed25519')
   const peerId = peerIdFromPrivateKey(privateKey)
-  const noiseHfs = new NoiseHFS({ privateKey, peerId, logger: defaultLogger(), upgrader: { getStreamMuxers: () => new Map() } })
+  const noiseHfs = createNoiseHFS(privateKey, peerId)
   console.log(`LOCAL ${peerId}`)
 
   const socket = net.createConnection(PORT, '127.0.0.1')
@@ -48,4 +47,4 @@ async function main () {
   await connection.close()
 }
 
-main().then(() => process.exit(0), fail)
+main().then(() => exitAfterFlush(0), fail)
