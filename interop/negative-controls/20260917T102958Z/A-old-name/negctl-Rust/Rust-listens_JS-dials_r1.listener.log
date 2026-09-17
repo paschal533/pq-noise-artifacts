@@ -1,0 +1,4 @@
+LOCAL 12D3KooWMrwnSTiyaEEyykYd78UcAzf6vC5nEfNgG4ZNWX6ji2Da
+READY 9402
+connection from 127.0.0.1:62484
+ERROR handshake failed: An existing connection was forcibly closed by the remote host. (os error 10054)

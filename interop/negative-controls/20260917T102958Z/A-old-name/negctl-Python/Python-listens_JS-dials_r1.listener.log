@@ -1,0 +1,3 @@
+LOCAL 12D3KooWAmff9DDpovUxg2UomiXZvZauyYzub4NEPSdVfr2n5mpY
+READY 9402
+ERROR ConnectionResetError(22, 'The specified network name is no longer available', None, 64, None)
