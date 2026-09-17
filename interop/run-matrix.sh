@@ -155,7 +155,7 @@ run_one () { # L D rep
   for _ in $(seq 1 $READY_TICKS); do
     tr -d '\r' < "$llog" | grep -q '^READY ' && { ready=1; break; }
     # Listener already exited without ever printing READY (e.g. exec
-    # failure on a missing binary) — no point burning the rest of the
+    # failure on a missing binary), so there is no point burning the rest of the
     # READY_TICKS budget waiting for a line that can now never appear.
     kill -0 "$lpid" 2>/dev/null || break
     sleep 0.2

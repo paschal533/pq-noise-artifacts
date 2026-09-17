@@ -14,7 +14,7 @@
 | keygen | 9.87 | 101 |
 | encapsulate | 12.46 | 80 |
 | decapsulate | 18.12 | 55 |
-| round-trip (encap+decap) | 30.58 | — |
+| round-trip (encap+decap) | 30.58 | n/a |
 
 ## Handshake Latency (in-memory, round-trip)
 
@@ -22,7 +22,7 @@
 |---------|-------------|--------------------|
 | Classical Noise XX | 3.31 | 302 |
 | Noise XXhfs (ML-KEM-768) | 37.26 | 27 |
-| Overhead | 12.0x | — |
+| Overhead | 12.0x | n/a |
 
 Overhead is the median of paired per-iteration ratios (range 5.4x-15.3x), sampled with the two protocols interleaved per iteration and alternating which goes first, so machine drift is common-mode and cancels in the ratio.
 

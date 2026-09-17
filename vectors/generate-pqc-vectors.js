@@ -146,7 +146,7 @@ function generateVector (idx) {
 
   return {
     vector_index: idx,
-    description: `Noise_XXhfs vector ${idx} — all keys seeded from base byte 0x${base.toString(16).padStart(2, '0')}`,
+    description: `Noise_XXhfs vector ${idx}: all keys seeded from base byte 0x${base.toString(16).padStart(2, '0')}`,
     // Fixed keypairs (hex)
     static_i_public: toHex(sInit.publicKey),
     static_i_private: toHex(sInit.privateKey),
@@ -191,7 +191,7 @@ const output = {
   generated_by: '@chainsafe/libp2p-noise (js-libp2p-noise)',
   kem: 'ML-KEM-768 (FIPS 203) via @noble/post-quantum',
   prologue: 'empty (0 bytes)',
-  payload: 'empty (ZEROLEN) — no libp2p handshake payload',
+  payload: 'empty (ZEROLEN): no libp2p handshake payload',
   vectors
 }
 

@@ -10,8 +10,8 @@
  *
  * It reports two things the paper needs to distinguish:
  *
- *   median-of-ratios  — median over per-iteration ratios (the paired figure)
- *   ratio-of-medians  — median(hybrid) / median(classical)
+ *   median-of-ratios: median over per-iteration ratios (the paired figure)
+ *   ratio-of-medians: median(hybrid) / median(classical)
  *
  * These are not the same statistic and can differ materially when the
  * distributions are skewed, which is the case here.

@@ -4,11 +4,11 @@
   "generated_by": "@chainsafe/libp2p-noise (js-libp2p-noise)",
   "kem": "ML-KEM-768 (FIPS 203) via @noble/post-quantum",
   "prologue": "empty (0 bytes)",
-  "payload": "empty (ZEROLEN) — no libp2p handshake payload",
+  "payload": "empty (ZEROLEN): no libp2p handshake payload",
   "vectors": [
     {
       "vector_index": 1,
-      "description": "Noise_XXhfs vector 1 — all keys seeded from base byte 0x10",
+      "description": "Noise_XXhfs vector 1: all keys seeded from base byte 0x10",
       "static_i_public": "7b4e909bbe7ffe44c465a220037d608ee35897d31ef972f07f74892cb0f73f13",
       "static_i_private": "1111111111111111111111111111111111111111111111111111111111111111",
       "static_r_public": "052a50773ac8d91773f2dc9662e12f0defe915e415b8a1c8e20a5a3d6ab2b843",
@@ -33,7 +33,7 @@
     },
     {
       "vector_index": 2,
-      "description": "Noise_XXhfs vector 2 — all keys seeded from base byte 0x20",
+      "description": "Noise_XXhfs vector 2: all keys seeded from base byte 0x20",
       "static_i_public": "7d34a4815fa6b982535e60af3bd9b49556816080f1641ff81d2b7c8ae8268a44",
       "static_i_private": "2121212121212121212121212121212121212121212121212121212121212121",
       "static_r_public": "0faa684ed28867b97f4a6a2dee5df8ce974e76b7018e3f22a1c4cf2678570f20",
@@ -58,7 +58,7 @@
     },
     {
       "vector_index": 3,
-      "description": "Noise_XXhfs vector 3 — all keys seeded from base byte 0x30",
+      "description": "Noise_XXhfs vector 3: all keys seeded from base byte 0x30",
       "static_i_public": "04f5f29162c31a8defa18e6e742224ee806fc1718a278be859ba5620402b8f3a",
       "static_i_private": "3131313131313131313131313131313131313131313131313131313131313131",
       "static_r_public": "59d9225473451efffe6b36dbcaefdbf7b1895de62084509a7f5b58bf01d06418",
@@ -83,7 +83,7 @@
     },
     {
       "vector_index": 4,
-      "description": "Noise_XXhfs vector 4 — all keys seeded from base byte 0x40",
+      "description": "Noise_XXhfs vector 4: all keys seeded from base byte 0x40",
       "static_i_public": "7a1a4e709bf085ac494aba0469b9b1eda0ab1f78b16aabb79ffeda90623e8522",
       "static_i_private": "4141414141414141414141414141414141414141414141414141414141414141",
       "static_r_public": "132c442be010fbd57e72603328aa76e71fccc1503aae219327d14d9c9993f472",
@@ -108,7 +108,7 @@
     },
     {
       "vector_index": 5,
-      "description": "Noise_XXhfs vector 5 — all keys seeded from base byte 0x50",
+      "description": "Noise_XXhfs vector 5: all keys seeded from base byte 0x50",
       "static_i_public": "ad908a8a708aca07588cda7c4ed3e44d4966a80a9abb2f1e4bbac53c67414e34",
       "static_i_private": "5151515151515151515151515151515151515151515151515151515151515151",
       "static_r_public": "f68b05ba03f7185e1ba88878682f8dd0b15158f6050889c9481d79c2d7d2fa07",
