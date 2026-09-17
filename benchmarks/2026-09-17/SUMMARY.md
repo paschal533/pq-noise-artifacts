@@ -11,39 +11,13 @@ was checked after this run (not during) via `Get-CimInstance Win32_Battery` and 
 (`Win32_Battery.BatteryStatus=2`) -- see `machine.txt`. Session ran 2026-09-17T02:50:40Z to
 2026-09-17T03:04:11Z (UTC throughout this document).
 
-This document makes no comparison between this run's figures and any earlier session's, beyond a
-single reference table near the end that lists the earlier figures with their own sources and
-states plainly why no delta is computed. Every number elsewhere in this document is this run's
-own, from this run's own raw files.
-
-## Whole-machine timing, same statistic on both sides only
-
-| Metric | Statistic | Prior session | Prior value | This run |
-|---|---|---|---:|---:|
-| JS classical, native backend | median of 5 pass-level medians | 2026-09-10 | 6.82 ms | 15.40 ms |
-| JS hybrid, native backend | median of 5 pass-level medians | 2026-09-10 | 10.30 ms | 24.10 ms |
-| Python classical | median | 2026-09-10 | 1.60 ms | 3.35 ms |
-| Python hybrid | median | 2026-09-10 | 17.07 ms | 40.08 ms |
-| Nim classical | median, paired, 5 passes | 8 Sept 2026 | 2.943 ms | 3.667 ms |
-| Nim hybrid | median, paired, 5 passes | 8 Sept 2026 | 3.356 ms | 4.358 ms |
-
-Sources for the prior-session column: JS, research-paper.md:692-710 (Sec 7.3, "Medians across
-five serial passes"); Python, research-paper.md:841-842 (Sec 7.7); Nim,
-research-paper.md:862-863 (Sec 7.8). Each row compares the same statistic (a median) computed the
-same way in both sessions, so a ratio between the two columns is meaningful on its own terms;
-none is computed here, because this table's purpose is to show that both sessions' absolute
-numbers exist and are the same kind of number, not to characterise the size or cause of any
-difference between them.
-
-Rust is not in this table. The paper's Rust classical/hybrid figures (0.888 ms / 1.099 ms) are
-criterion point estimates (research-paper.md:659, Sec 7.1). This run's in-run tables below use
-`estimates.json` medians (`median.point_estimate`, via `rust-passes.tsv`), a different statistic.
-This run also has a per-pass point-estimate series (see "In-run sensitivity" below), but that
-series mixes two criterion sampling modes across its five passes and is not used for any
-cross-session comparison.
-
-AC power was checked after this run and found on; no AC-power or power-plan record exists from
-the 2026-09-10 or 8 Sept sessions, so nothing is stated about it beyond this run.
+Previously published figures appear in this document only in one reference table near the end
+("Previously published figures (not directly comparable)"), each with its date, its line in
+`research-paper.md` and the paper's own wording for its statistic. No delta, ratio or factor
+between a published figure and a figure from this run is computed anywhere in this document.
+Every other number here is this run's own, from this run's own raw files. No AC-power or
+power-plan record exists from the 2026-09-10 or 2026-09-08 sessions, so nothing is stated about
+either beyond this run.
 
 ## This run's results
 
@@ -52,7 +26,7 @@ the 2026-09-10 or 8 Sept sessions, so nothing is stated about it beyond this run
 | JavaScript | `@noble/post-quantum` 0.6.0 | 15.40 | 24.10 | 1.56x | 1.51-1.60x | 5 x 30 | Per-iteration paired (both protocols interleaved, order rotated each iteration), backend held constant (native); per-pass value is the median of the 30 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
 | Python | `kyber-py` 1.2.0 (pure Python) | 3.35 | 40.08 | 12.0x | 11.3-12.4x | 5 x 50 | Per-iteration interleaved as of this task's Step 1 (alternating which protocol runs first each iteration, fresh keys per handshake); per-pass value is the median of the 50 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
 | Nim | BoringSSL (via nim-libp2p) | 3.67 | 4.36 | 1.19x | 1.16-1.21x | 5 x 500 | Per-iteration interleaved (existing harness: classical handshake then hybrid handshake each iteration). The harness's own "overhead from paired difference" line (1 + median per-iteration difference / classical median) gives 1.190, 1.189, 1.144, 1.132, 1.174 across the 5 passes. The table's headline ratio is the ratio of the pass's hybrid median to its classical median, medianed and ranged over the 5 passes. |
-| Rust | RustCrypto `ml-kem` | 1.57 | 1.96 | 1.32x | 1.23-1.61x | 5 passes; 100 criterion samples per bench per pass | Pass-level only, not interleaved: each pass is one `cargo bench` process that runs the classical bench, then the hybrid bench, sequentially within that process. Sampling mode varied by pass -- see Anomalies. Classical and hybrid figures above are `estimates.json` medians (field `median.point_estimate`) via `rust-passes.tsv`; the table reports the median and range of the 5 pass-level ratios computed from those medians. |
+| Rust | RustCrypto `ml-kem` | 1.57 | 1.96 | 1.32x | 1.23-1.61x | 5 passes; 100 criterion samples per bench per pass | Pass-level only, not interleaved: each pass is one `cargo bench` process that runs the classical bench, then the hybrid bench, sequentially within that process. Sampling mode appears to have varied by pass (passes 1-2 inferred Flat, passes 3-4 inferred Linear, pass 5 confirmed Linear) -- see Anomalies. Classical and hybrid figures above are `estimates.json` medians (field `median.point_estimate`) via `rust-passes.tsv`; the table reports the median and range of the 5 pass-level ratios computed from those medians. |
 
 Absolute milliseconds are **not comparable across languages** -- each harness measures a different
 transport (in-memory channel, `bridgedConnections`, `multiaddrConnectionPair`, criterion
@@ -62,8 +36,8 @@ sound comparison.
 
 **In-run sensitivity (Rust only, no cross-session use).** criterion also prints a `time: [low mid
 high]` line per bench per pass; the middle value is the slope estimate for Linear-sampled passes,
-while passes 1-2 were Flat-sampled and report a different estimator for the same field (see
-Anomalies for which passes are which). Reading that field regardless of sampling mode gives
+while passes 1-2 are inferred to have been Flat-sampled, in which case the same field holds a
+different estimator (see Anomalies for which passes are which). Reading that field regardless of sampling mode gives
 per-pass ratios of 1.468, 1.945, 1.324, 1.282, 1.338 -- median 1.338x, range 1.28-1.94x. This is a
 different statistic from the `estimates.json`-median-based 1.32x (1.23-1.61x) reported in the
 table above, computed from the same five passes; it is reported here only to show that the two
@@ -73,7 +47,11 @@ anything from any other session.
 ## KEM share of the hybrid handshake, this run only
 
 Every figure in this section is `(hybrid_ms - classical_ms) / hybrid_ms` (the delta method),
-computed from this run's own raw files, with no comparison to any other session:
+computed from this run's own raw files. The inputs are the medians named in the results table
+above: for JavaScript, the medians of the 5 pass-level medians on the native backend (24.10 and
+15.40 ms); for Python, the medians of the 5 per-pass handshake medians (40.08 and 3.35 ms); for
+Rust, the medians of the 5 per-pass `estimates.json` medians via `rust-passes.tsv` (1.960 and
+1.569 ms); for Nim, each pass's own classical and hybrid harness medians, one share per pass:
 
 | Language | KEM share (delta method) |
 |---|---:|
@@ -83,41 +61,46 @@ computed from this run's own raw files, with no comparison to any other session:
 | Nim | per pass: 17.5%, 17.3%, 14.1%, 15.0%, 15.9% (median 15.9%), from each pass's own classical/hybrid medians in `nim-pass1.txt` through `nim-pass5.txt` |
 
 Nim's harness also prints its own "KEM fraction of XXhfs time" line, computed by a different
-(standalone microbenchmark / hybrid handshake) method: 13.0%, 12.2%, 8.9%, 8.9%, 9.5% across the
-5 passes (median 9.5%). This is included because it is what the harness itself reports, not
-because it is compared against the delta-method figures in the same table.
+(standalone microbenchmark / hybrid handshake) method: 13.0%, 12.2%, 8.9%, 8.9%, 9.5% for passes
+1-5 (median 9.5%). It is listed because it is what the harness itself reports; it is a different
+quantity from the delta-method figures in the table.
 
 ## Previously published figures (not directly comparable)
 
-| Language | Date | Metric | Value | Statistic | Source |
-|---|---|---|---:|---|---|
-| JavaScript | 2026-09-10 | Classical, native | 6.82 ms | median, 5 passes | research-paper.md:692-696 (Sec 7.3) |
-| JavaScript | 2026-09-10 | Hybrid, native | 10.30 ms | median, 5 passes | research-paper.md:710 (Sec 7.3) |
-| JavaScript | 2026-09-10 | Overhead, like-for-like native | 1.51x, range 1.51-1.58 | median-based ratio, precision across 5 passes | research-paper.md:890-891 (Sec 7.9) |
-| JavaScript | 2026-09-10 | KEM share | ~34% | as published | research-paper.md:893, 908 (Sec 7.9) |
-| Python | 2026-09-10 | Classical | 1.60 ms | median | research-paper.md:841 (Sec 7.7) |
-| Python | 2026-09-10 | Hybrid | 17.07 ms | median | research-paper.md:842 (Sec 7.7) |
-| Python | 2026-09-10 | Overhead | 10.7x | ratio of medians, single run | research-paper.md:843, 890 (Sec 7.7/7.9) |
-| Python | 2026-09-10 | KEM share | ~91% | as published | research-paper.md:893, 845, 906 (Sec 7.9/7.7) |
-| Rust | 2026-09-10 | Classical | 0.888 ms | criterion point estimate | research-paper.md:659 (Sec 7.1), table at 872 (Sec 7.8) |
-| Rust | 2026-09-10 | Hybrid | 1.099 ms | criterion point estimate | research-paper.md:659 (Sec 7.1), table at 873 (Sec 7.8) |
-| Rust | 2026-09-10 | Overhead | 1.24x | as published (Sec 7.8 table, research-paper.md:866-874) | research-paper.md:874, 890 |
-| Rust | 2026-09-10 | KEM share | ~19%, upper bound | as published | research-paper.md:893 (Sec 7.9) |
-| Nim | 8 Sept 2026 | Classical | 2.943 ms | median, paired, 5 passes | research-paper.md:862 (Sec 7.8) |
-| Nim | 8 Sept 2026 | Hybrid | 3.356 ms | median, paired, 5 passes | research-paper.md:863 (Sec 7.8) |
-| Nim | 8 Sept 2026 | Overhead | 1.13x, range 1.12-1.14 | median-based ratio, precision across 5 passes | research-paper.md:890-891 (Sec 7.9) |
-| Nim | 8 Sept 2026 | KEM share | ~8% | as published (standalone KEM microbenchmark / hybrid handshake) | research-paper.md:893 (Sec 7.9) |
+Published values, their statistics and their line numbers are from `research-paper.md`. Each
+statistic is quoted in the paper's own words, or given as "as published" where the paper does not
+name one. The "This run" columns are filled only for absolute handshake latencies; this run's
+overhead and KEM-share figures are in the tables above and are not repeated beside the published
+ones.
 
-No delta, shift, or percentage change is computed anywhere in this document between any row above
-and this run's own figures. Three reasons: this run's absolute latencies differ from the
-2026-09-10 session's by roughly a factor of two across JS, Python and Rust (see the timing table
-above); the paper separately documents day-to-day drift of a similar size on this same machine,
-independent of any particular session pair (research-paper.md:651, "this machine ran roughly
-twice as fast on 10 September as on 8 September"); and the Python figures additionally span a
-sampling-method change (the 2026-09-10 harness ran classical and hybrid handshakes in separate
-phases, while this run's harness -- built in this task's Step 1 -- interleaves them per
-iteration). Any of the three would be enough on its own to make a cross-session delta
-uninformative; together, no such number is given.
+| Language | Metric | Published date | Published value | Statistic, as the paper words it | Paper line | This run, 2026-09-17 | This run's statistic |
+|---|---|---|---:|---|---|---:|---|
+| JavaScript | Classical handshake, native backend | 2026-09-10 | 6.82 ms | "Medians across five serial passes" (:692); the same value also appears in the table introduced as "Medians of thirty iterations, four repetitions" (:703) | :696, :707 | 15.40 ms | median of the 5 pass-level medians (`summary.medians.xxNative`, `js-paired-passes.json`) |
+| JavaScript | Hybrid handshake, native backend | 2026-09-10 | 10.30 ms | "Medians of thirty iterations, four repetitions" (:703) | :710 | 24.10 ms | median of the 5 pass-level medians (`summary.medians.hfsNative`, `js-paired-passes.json`) |
+| JavaScript | Like-for-like overhead | 2026-09-10 | 1.51x | as published; "Precision" row reads "1.51–1.58 (5 passes)" (:891) | :890, :891 | -- | -- |
+| JavaScript | KEM share of XXhfs | 2026-09-10 | ~34% | as published | :893 | -- | -- |
+| Python | Classical handshake | 2026-09-10 | 1.60 ms | "Medians across five serial passes" (:833); column header "Median ms/op" (:835) | :841 | 3.35 ms | median of the 5 per-pass medians (`python-pass1.txt` through `python-pass5.txt`; each a median over 50 handshakes) |
+| Python | Hybrid handshake | 2026-09-10 | 17.07 ms | "Medians across five serial passes" (:833); column header "Median ms/op" (:835) | :842 | 40.08 ms | median of the 5 per-pass medians (as for classical) |
+| Python | Overhead | 2026-09-10 | 10.7x | "XXhfs overhead vs classical" (:843); "the quotient of two medians from a single invocation" (:849); "Precision" row reads "single run" (:891) | :843, :849, :890, :891 | -- | -- |
+| Python | KEM share of XXhfs | 2026-09-10 | ~91% | as published; worded as "approximately 91% of the 17.07 ms total" (:845) | :845, :893 | -- | -- |
+| Rust | Classical handshake | 2026-09-10 | 0.888 ms | criterion point estimate: "the point estimates are quoted here" (:659) | :868, :872 | 1.57 ms | median of the 5 per-pass `estimates.json` medians (`median.point_estimate`), via `rust-passes.tsv` |
+| Rust | Hybrid handshake | 2026-09-10 | 1.099 ms | criterion point estimate: "the point estimates are quoted here" (:659) | :868, :873 | 1.96 ms | median of the 5 per-pass `estimates.json` medians (`median.point_estimate`), via `rust-passes.tsv` |
+| Rust | Overhead | 2026-09-10 | 1.24x | as published | :874, :890 | -- | -- |
+| Rust | KEM share of XXhfs | 2026-09-10 | ~19% | as published; footnote: "an upper bound rather than a measurement" (:896) | :893, :896 | -- | -- |
+| Nim | Classical handshake | 2026-09-08 | 2.943 ms | "Medians across five serial passes of the 8 September session" (:857) | :862 | 3.67 ms | median of the 5 per-pass harness medians ("classical XX median", `nim-pass1.txt` through `nim-pass5.txt`) |
+| Nim | Hybrid handshake | 2026-09-08 | 3.356 ms | "Medians across five serial passes of the 8 September session" (:857) | :863 | 4.36 ms | median of the 5 per-pass harness medians ("XXhfs median", `nim-pass1.txt` through `nim-pass5.txt`) |
+| Nim | Overhead | 2026-09-08 | 1.127x (range 1.117–1.141) | "Paired overhead" (:864); also given as 1.13x with "Precision" "1.12–1.14 (5 passes)" (:890, :891) | :864, :890, :891 | -- | -- |
+| Nim | KEM share of XXhfs | 2026-09-08 | ~8% | as published; worded as "approximately 8.2% of hybrid handshake time" (:866) | :866, :893 | -- | -- |
+
+Every value in the "This run" column is higher than the published value in the same row. No
+delta, ratio or factor between a published value and a figure from this run is computed anywhere in
+this document, and it is not claimed that any published value was computed with the same statistic as
+the corresponding figure from this run. The paper itself states that "absolute latencies are not
+comparable between the two sessions" and that "this machine ran roughly twice as fast on 10
+September as on 8 September, which is well within the drift documented below"
+(research-paper.md:651). The paper's "Paired sampling" row reads "no" for Python (:892); this
+run's Python harness, as revised in this task's Step 1, interleaves the classical and hybrid
+handshakes per iteration.
 
 ## Anomalies and notes
 
@@ -153,7 +136,7 @@ uninformative; together, no such number is given.
 - **Rust's per-pass timing, one statistic.** Using the `estimates.json` medians already used in
   the tables above (via `rust-passes.tsv`): classical 2.098, 1.812, 1.466, 1.569, 1.483 ms across
   passes 1-5; hybrid 2.967, 2.911, 1.830, 1.931, 1.960 ms. Passes 1-2 are higher on both benches
-  by this statistic than passes 3-5, coinciding with the Flat/Linear sampling-mode difference
+  by this statistic than passes 3-5, coinciding with the inferred Flat/Linear sampling-mode difference
   described above and with the "Unable to complete 100 samples" warning starting at pass 3. Rust
   is the one language sampled pass-level rather than per-iteration, so it has no per-iteration
   pairing between the classical and hybrid runs within a pass. No cause is asserted for the
