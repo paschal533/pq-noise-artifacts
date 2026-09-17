@@ -1,0 +1,38 @@
+Hint: used config file 'C:\tools\Nim\nim-2.2.10\config\nim.cfg' [Conf]
+Hint: used config file 'C:\tools\Nim\nim-2.2.10\config\config.nims' [Conf]
+Hint: used config file 'nim-libp2p\config.nims' [Conf]
+Hint: mm: refc; threads: on; opt: speed; options: -d:release
+21300 lines; 0.091s; 20.051MiB peakmem; proj: nim-libp2p\benchmarks\bench_noisehfs.nim; out: nim-libp2p\benchmarks\bench_noisehfs.exe [SuccessX]
+Hint: nim-libp2p\benchmarks\bench_noisehfs.exe [Exec]
+
+ML-KEM-768 microbenchmarks (BoringSSL via nim-libp2p)
+warm-up 10, 1000 timed iterations, median
+
+| Operation                                    |    ops/s |    ms/op |  IQR ms |
+|----------------------------------------------|---------:|---------:|--------:|
+| generateKeyPair (ML-KEM-768 keygen)          |     5208. |     0.192 |    0.020 |
+| encapsulate(publicKey)                       |     4527. |     0.221 |    0.046 |
+| decapsulate(cipherText, secretKey)           |     8147. |     0.123 |    0.056 |
+| Full KEM round-trip (keygen + encap + decap) |     1867. |     0.536 |          |
+
+Handshake latency (in-memory connection pair, Ed25519 identity)
+warm-up 20, 500 timed iterations, median
+
+| Protocol                                     |    ops/s |ms/handshk|  IQR ms |
+|----------------------------------------------|---------:|---------:|--------:|
+| Noise_XX_25519_ChaChaPoly_SHA256 (classical) |      195. |     5.122 |    3.358 |
+| Noise_XXhfs_25519+MLKEM768 (hybrid)          |      166. |     6.025 |    3.619 |
+
+Derived figures
+
+  classical XX median              : 5.122 ms
+  XXhfs median                     : 6.025 ms
+  paired difference (median)       : 0.674 ms
+  paired diff IQR                  : 0.762 ms
+  iterations where hybrid > classical: 420/500
+  measured KEM round-trip          : 0.536 ms
+  XXhfs overhead over classical XX : 1.176x
+  overhead from paired difference  : 1.132x
+  KEM fraction of XXhfs time       : 8.9%
+  Non-KEM overhead                 : 5.49 ms
+  (blackhole 366602)

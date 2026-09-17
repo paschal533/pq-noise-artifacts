@@ -1,0 +1,52 @@
+Running benchmarks … (this may take ~30–60 seconds)
+  KEM iterations:       200
+  Handshake iterations: 50
+  Throughput rounds:    200
+  Benchmarking kyber-py (pure Python)…
+
+============================================================
+  ML-KEM-768 KEM backend comparison
+============================================================
+  Backend                  keygen      encap      decap    speedup
+  ----------------------------------------------------------------
+  kyber-py                  9.54ms     11.03ms     12.28ms     1.0x
+
+============================================================
+  ML-KEM-768 KEM micro-benchmarks (kyber-py baseline)
+============================================================
+  keygen     :    9.87 ms/op  (   101.4 ops/s)
+  encapsulate:   12.46 ms/op  (    80.3 ops/s)
+  decapsulate:   18.12 ms/op  (    55.2 ops/s)
+  round-trip (encap+decap): 30.58 ms
+
+============================================================
+  Handshake latency (in-memory, round-trip)
+============================================================
+  Classical XX :    3.31 ms/op  (   302.2 ops/s)
+  XXhfs (PQ)   :   37.26 ms/op  (    26.8 ops/s)
+  Overhead     : 12.0x (median of paired per-iteration ratios, range 5.4x-15.3x)
+
+============================================================
+  Transport throughput (after handshake)
+============================================================
+      Size     Classical    XXhfs (PQ)     Ratio
+      1 KB        13.8 MB/s         8.3 MB/s     0.60x
+     10 KB        77.4 MB/s        87.1 MB/s     1.12x
+     60 KB       265.6 MB/s       353.6 MB/s     1.33x
+
+============================================================
+  Wire sizes (handshake bytes, excluding libp2p payload)
+============================================================
+  Classical XX total (fixed): 160 B
+    Msg 1: 32 B
+    Msg 2: 80 B (fixed, + payload)
+    Msg 3: 48 B (fixed, + payload)
+
+  XXhfs total (fixed): 2448 B
+    Msg A: 1216 B (e + e1_pk)
+    Msg B: 1184 B (e + enc_ct + enc_s)
+    Msg C: 48 B (enc_s, fixed)
+  Wire overhead vs classical: +2288 B (14x)
+
+
+Results saved to py-libp2p\benchmarks\results.md

@@ -1,0 +1,57 @@
+Hint: used config file 'C:\tools\Nim\nim-2.2.10\config\nim.cfg' [Conf]
+Hint: used config file 'C:\tools\Nim\nim-2.2.10\config\config.nims' [Conf]
+Hint: used config file 'nim-libp2p\config.nims' [Conf]
+......................................................................................................................................................................................................................................................................................................
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(715, 9) Hint: Declaration of enum_ssl_private_key_result_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(738, 9) Hint: Declaration of enum_ssl_ticket_aead_result_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(761, 9) Hint: Declaration of enum_fips_counter_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(806, 9) Hint: Declaration of enum_ssl_compliance_policy_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(888, 9) Hint: Declaration of enum_ssl_verify_result_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(958, 9) Hint: Declaration of enum_ssl_select_cert_result_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(966, 9) Hint: Declaration of enum_ssl_renegotiate_mode_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1121, 9) Hint: Declaration of enum_spake2_role_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1134, 9) Hint: Declaration of enum_ssl_early_data_reason_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1242, 9) Hint: Declaration of enum_ssl_encryption_level_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1285, 9) Hint: Declaration of enum_point_conversion_form_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1408, 9) Hint: Declaration of ptrdiff_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1420, 9) Hint: Declaration of enum_evp_aead_direction_t already exists, not redeclaring [User]
+nim-libp2p\nimbledeps\pkgs2\boringssl-0.0.8-2f603bb6d70683393bbb091bf6bd325d9c52be9f\boringssl.nim(1480, 9) Hint: Declaration of enum_bn_primality_result_t already exists, not redeclaring [User]
+...................
+CC: ../libp2p/protocols/secure/noisehfs.nim
+CC: bench_noisehfs.nim
+Hint:  [Link]
+Hint: mm: refc; threads: on; opt: speed; options: -d:release
+229819 lines; 54.591s; 413.773MiB peakmem; proj: nim-libp2p\benchmarks\bench_noisehfs.nim; out: nim-libp2p\benchmarks\bench_noisehfs.exe [SuccessX]
+Hint: nim-libp2p\benchmarks\bench_noisehfs.exe [Exec]
+
+ML-KEM-768 microbenchmarks (BoringSSL via nim-libp2p)
+warm-up 10, 1000 timed iterations, median
+
+| Operation                                    |    ops/s |    ms/op |  IQR ms |
+|----------------------------------------------|---------:|---------:|--------:|
+| generateKeyPair (ML-KEM-768 keygen)          |     5214. |     0.192 |    0.008 |
+| encapsulate(publicKey)                       |     4585. |     0.218 |    0.009 |
+| decapsulate(cipherText, secretKey)           |     8696. |     0.115 |    0.000 |
+| Full KEM round-trip (keygen + encap + decap) |     1905. |     0.525 |          |
+
+Handshake latency (in-memory connection pair, Ed25519 identity)
+warm-up 20, 500 timed iterations, median
+
+| Protocol                                     |    ops/s |ms/handshk|  IQR ms |
+|----------------------------------------------|---------:|---------:|--------:|
+| Noise_XX_25519_ChaChaPoly_SHA256 (classical) |      301. |     3.327 |    2.178 |
+| Noise_XXhfs_25519+MLKEM768 (hybrid)          |      248. |     4.031 |    2.312 |
+
+Derived figures
+
+  classical XX median              : 3.327 ms
+  XXhfs median                     : 4.031 ms
+  paired difference (median)       : 0.632 ms
+  paired diff IQR                  : 0.383 ms
+  iterations where hybrid > classical: 450/500
+  measured KEM round-trip          : 0.525 ms
+  XXhfs overhead over classical XX : 1.211x
+  overhead from paired difference  : 1.190x
+  KEM fraction of XXhfs time       : 13.0%
+  Non-KEM overhead                 : 3.51 ms
+  (blackhole 506991)

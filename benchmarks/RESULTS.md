@@ -1,10 +1,14 @@
 # Benchmark results
 
-`Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256` against classical `Noise_XX_25519_ChaChaPoly_SHA256`.
+`Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256` against classical `Noise_XX_25519_ChaChaPoly_SHA256`.
 
 **Platform:** Node.js v22.17.1, Windows 11 Pro, win32 x64. One machine.
 **Method:** `paired-passes.mjs`, 5 independent passes, 30 iterations each, medians per pass.
-**Raw data:** `paired-passes-results.json`.
+**Raw data:** `benchmarks/2026-09-17/js-paired-passes.json` (this run); `paired-passes-results.json`
+(prior run, retained for the 2026-09-10 comparison figures below).
+**Last refreshed:** 2026-09-17, alongside paired Python, Nim and Rust runs in the same session.
+See `benchmarks/2026-09-17/SUMMARY.md` for the full cross-language write-up and sampling method
+per language.
 
 ## The comparison has to be like for like
 
@@ -21,29 +25,42 @@ So each pass measures all four cells and reports the ratios separately.
 
 | | min | **median** | max |
 |---|---:|---:|---:|
-| classical XX, native backend | 6.49 | **6.82 ms** | 7.93 |
-| classical XX, pure JS backend | 19.97 | **20.72 ms** | 23.65 |
-| hybrid XXhfs, native backend | 10.17 | **10.30 ms** | 12.73 |
-| hybrid XXhfs, pure JS backend | 23.65 | **24.15 ms** | 26.92 |
+| classical XX, native backend | 12.86 | **15.40 ms** | 18.52 |
+| classical XX, pure JS backend | 36.70 | **42.45 ms** | 50.75 |
+| hybrid XXhfs, native backend | 20.10 | **24.10 ms** | 27.92 |
+| hybrid XXhfs, pure JS backend | 43.38 | **48.25 ms** | 61.00 |
+
+(min/median/max of the five pass-level medians, 2026-09-17 run; see `benchmarks/2026-09-17/js-paired-passes.json`)
 
 ## The overhead of going post-quantum
 
 | comparison | overhead |
 |---|---:|
-| default configurations, backend varies with the KEM | 3.54x (per-pass range 3.40 to 3.64) |
-| **like for like, backend held constant** | **1.51x** (per-pass range 1.51 to 1.58) |
+| default configurations, backend varies with the KEM | 3.24x (per-pass range 3.19 to 3.52) |
+| **like for like, backend held constant** | **1.56x** (per-pass range 1.51 to 1.60) |
 
-Of the 17.3 ms separating the two default configurations, over four fifths is the backend
-substitution and only about 3.5 ms is the KEM, roughly 34% of the hybrid handshake.
+Of the 32.9 ms separating the two default configurations (hybrid pure-JS vs classical native), about
+27.0 ms (82%) is the backend substitution and about 8.6 ms is the KEM, roughly 36% of the hybrid
+(native) handshake.
 
-For context across implementations of the same protocol, each with its own backend held constant:
+For context across implementations of the same protocol, each with its own backend held constant.
+Figures below are all from the 2026-09-17 session (see `benchmarks/2026-09-17/SUMMARY.md` for raw
+data and sampling method per language); the 2026-09-10 values are kept alongside for comparison:
 
-| | overhead | KEM share of the hybrid handshake |
-|---|---:|---:|
-| Python (`kyber-py`) | 10.7x | ~91% |
-| **JavaScript** (`@noble/post-quantum`) | **1.51x** | ~34% |
-| Rust (RustCrypto `ml-kem`) | 1.24x | ~19%, an upper bound |
-| Nim (BoringSSL) | 1.13x | ~8% |
+| | overhead (2026-09-10) | overhead (2026-09-17) | KEM share of the hybrid handshake (2026-09-17) |
+|---|---:|---:|---:|
+| Python (`kyber-py`) | 10.7x | **12.0x** (range 11.3-12.4) | ~68% |
+| **JavaScript** (`@noble/post-quantum`) | 1.51x | **1.56x** (range 1.51-1.60) | ~36% |
+| Rust (RustCrypto `ml-kem`) | 1.24x | **1.32x** (range 1.23-1.61) | ~20%, an upper bound |
+| Nim (BoringSSL) | 1.13x | **1.19x** (range 1.16-1.21) | ~12% |
+
+Every 2026-09-17 ratio shifted upward from 2026-09-10; none moved in the direction of making the
+post-quantum handshake look cheaper. The largest single shift is Python's KEM share, which fell
+from ~91% to ~68% of the hybrid handshake even as its overhead ratio rose — the absolute
+handshake latency and its composition both moved, not just the ratio, and this is reported as a
+finding rather than reconciled here. See the anomalies section of `benchmarks/2026-09-17/SUMMARY.md`
+for the fuller discussion, including the Nim run's ~60% pass-to-pass swing in absolute latency and
+Rust's wide 1.23x-1.61x per-pass spread.
 
 A lower ratio is not automatically better. Nim's is partly a larger denominator: only its KEM
 reaches BoringSSL, while its classical primitives come from BearSSL and pure Nim.
@@ -76,8 +93,8 @@ ciphertext plus its 16-byte AEAD tag (`ekem1`). Msg C is unchanged from classica
 - **One machine, one OS, one Node version.** Absolute milliseconds are indicative; the ratios are
   the claim.
 - **Medians of 5 passes x 30 iterations.** The spread across passes is small (the like-for-like
-  native ratio moves only between 1.51x and 1.61x), but this is a shared desktop, not an isolated
-  benchmarking rig.
+  native ratio moves only between 1.51x and 1.60x, 2026-09-17 run), but this is a shared desktop,
+  not an isolated benchmarking rig.
 - **Handshake latency only.** This does not measure throughput after the handshake, memory, or
   behaviour under connection churn.
 - **`@noble/post-quantum` does not claim constant-time execution.** Its own documentation notes
