@@ -1,0 +1,7 @@
+LOCAL 12D3KooWNFMueVRy3SjK4d7gYS89iSDzsqBTqeJtbufrfriwf6qM
+READY 9446
+connection from 127.0.0.1:57003
+PEER 12D3KooWFay3myvR94Ber7LeGBEMDRCovZkZihKsDNKGndxK58yb
+SENT hello from Rust
+RECV hello from Rust
+INTEROP_OK

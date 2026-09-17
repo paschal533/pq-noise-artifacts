@@ -1,0 +1,6 @@
+LOCAL 12D3KooWNoar3RwmozWMwQoC3pnzYmUjT1KddSeCY9QeEFXDMRJF
+READY 9418
+PEER 12D3KooWAxEbLuzTdzRLWRkBuGb7cbEYoMatAhUwwgnpCmfXJZVw
+SENT hello from Python
+RECV hello from Nim
+INTEROP_OK

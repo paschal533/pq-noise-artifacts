@@ -1,0 +1,6 @@
+LOCAL 12D3KooWSzpouohhp3NLToPJ331DhXuCyfBuT5CwMMrGmpyPvmVy
+DIALING port 9431
+PEER 12D3KooWCip8uyXs1XiH1e1ycLEHdU3bkyBgro2NpWbpM2vYchEb
+RECV hello from Nim
+SENT hello from Nim
+INTEROP_OK

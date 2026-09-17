@@ -1,0 +1,11 @@
+LOCAL 12D3KooWLtenDXJiv8LAPVfQysvwqJYXdsf8iP71SbotLHUr6Vk5
+INF 2026-09-17 22:36:08.985+01:00 Starting TCP transport                     topics="libp2p tcp" tid=28504
+INF 2026-09-17 22:36:08.988+01:00 Transport starting                         topics="libp2p transport" tid=28504 addresses=[/ip4/127.0.0.1/tcp/9432]
+READY 9432
+PEER 12D3KooWFpifHUiNu5YCZ6333qXoSYgP3HUbhMTmPzfdXjXVUh5u
+SENT hello from Nim
+RECV hello from Nim
+INF 2026-09-17 22:36:09.116+01:00 Stopping TCP transport                     topics="libp2p tcp" tid=28504
+INF 2026-09-17 22:36:09.116+01:00 Transport stopping                         topics="libp2p transport" tid=28504 addresses=[/ip4/127.0.0.1/tcp/9432]
+INF 2026-09-17 22:36:09.127+01:00 Transport stopped                          topics="libp2p tcp" tid=28504
+INTEROP_OK

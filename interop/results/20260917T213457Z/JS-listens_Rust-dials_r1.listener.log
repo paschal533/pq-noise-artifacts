@@ -1,0 +1,6 @@
+LOCAL 12D3KooWPQQchfhKhXqCQyu2vinb3hKm2boEWNLbxMH2JgxwqNfW
+READY 9409
+PEER 12D3KooWN18XLeLfFpmxREjXbVSroJ5me7cc7vXbpUcNdJu1rsmg
+SENT hello from JS
+RECV hello from Rust
+INTEROP_OK

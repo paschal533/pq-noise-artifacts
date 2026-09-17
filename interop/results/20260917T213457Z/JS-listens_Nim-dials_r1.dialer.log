@@ -1,0 +1,6 @@
+LOCAL 12D3KooWT2Xgq9BS2uWEppcB8QpgJCiCLxFWjdE2LNE1S5ej9idn
+DIALING port 9406
+PEER 12D3KooWGt2tTmp1YAwo2RYbmG2yptDtNgSTa7KsczJbAcwKmsrd
+RECV hello from JS
+SENT hello from Nim
+INTEROP_OK
