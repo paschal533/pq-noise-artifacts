@@ -20,7 +20,12 @@
 # PYTHON defaults to "python" (whatever is first on PATH). On Windows this
 # should be pointed at the py-libp2p venv interpreter, e.g.
 #   PYTHON=/path/to/py-libp2p/.venv/Scripts/python.exe
-# so that PYTHONPATH=$PY_DIR resolves the right package.
+# so that PYTHONPATH=$PY_DIR resolves the right package. PYTHON is one
+# executable path (it may contain spaces), not a command line.
+#
+# IMPLS must name known implementations, REPS must be a positive integer and
+# BASE_PORT a port such that every run's port stays <= 65535; otherwise the
+# script prints ERROR and exits 2 before starting anything.
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -32,6 +37,23 @@ PORT="${BASE_PORT:-9400}"
 READY_TICKS=150       # x 0.2 s
 DIAL_TIMEOUT=60       # seconds
 OUT="${OUT:-$HERE/results/$(date -u +%Y%m%dT%H%M%SZ)}"
+KNOWN_IMPLS=(JS Python Nim Rust)
+
+die () { echo "ERROR $*" >&2; exit 2; }
+
+read -r -a IMPL_LIST <<< "$IMPLS"
+[ "${#IMPL_LIST[@]}" -gt 0 ] || die "IMPLS is empty"
+for impl in "${IMPL_LIST[@]}"; do
+  case " ${KNOWN_IMPLS[*]} " in
+    *" $impl "*) ;;
+    *) die "unknown implementation in IMPLS: '$impl' (known: ${KNOWN_IMPLS[*]})" ;;
+  esac
+done
+[[ "$REPS" =~ ^[1-9][0-9]{0,3}$ ]] || die "REPS must be an integer from 1 to 9999 (got '$REPS')"
+[[ "$PORT" =~ ^[1-9][0-9]{0,4}$ ]] || die "BASE_PORT must be a positive integer port (got '$PORT')"
+LAST_PORT=$((PORT + ${#IMPL_LIST[@]} * ${#IMPL_LIST[@]} * REPS - 1))
+[ "$LAST_PORT" -le 65535 ] || die "BASE_PORT=$PORT needs ports up to $LAST_PORT, beyond 65535"
+
 mkdir -p "$OUT"
 
 # `timeout` must resolve to GNU coreutils' timeout, not
@@ -46,17 +68,19 @@ esac
 
 exe () { if [ -x "$1.exe" ]; then echo "$1.exe"; else echo "$1"; fi; }
 
-cmd () { # role impl port
+# Sets the array CMD to the command for role/impl/port. An array rather than
+# an echoed string, so directory paths containing spaces stay one argument.
+set_cmd () { # role impl port
   case "$1:$2" in
-    listen:JS)     echo "node $JS_DIR/scripts/node-listener.mjs --port $3" ;;
-    dial:JS)       echo "node $JS_DIR/scripts/noise-hfs-dial.mjs --port $3" ;;
-    listen:Python) echo "env PYTHONPATH=$PY_DIR $PYTHON $PY_DIR/scripts/interop_listen_mlkem768.py --port $3" ;;
-    dial:Python)   echo "env PYTHONPATH=$PY_DIR $PYTHON $PY_DIR/scripts/interop_dial_mlkem768.py --port $3" ;;
-    listen:Nim)    echo "$(exe "$NIM_DIR/interop/noise-pq/interop_listen") $3" ;;
-    dial:Nim)      echo "$(exe "$NIM_DIR/interop/noise-pq/interop_dial") $3" ;;
-    listen:Rust)   echo "$(exe "$RUST_DIR/target/debug/examples/noise_hfs_listener") $3" ;;
-    dial:Rust)     echo "$(exe "$RUST_DIR/target/debug/examples/noise_hfs_dialer") $3" ;;
-    *) echo "unknown $1:$2" >&2; exit 2 ;;
+    listen:JS)     CMD=(node "$JS_DIR/scripts/node-listener.mjs" --port "$3") ;;
+    dial:JS)       CMD=(node "$JS_DIR/scripts/noise-hfs-dial.mjs" --port "$3") ;;
+    listen:Python) CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_listen_mlkem768.py" --port "$3") ;;
+    dial:Python)   CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_dial_mlkem768.py" --port "$3") ;;
+    listen:Nim)    CMD=("$(exe "$NIM_DIR/interop/noise-pq/interop_listen")" "$3") ;;
+    dial:Nim)      CMD=("$(exe "$NIM_DIR/interop/noise-pq/interop_dial")" "$3") ;;
+    listen:Rust)   CMD=("$(exe "$RUST_DIR/target/debug/examples/noise_hfs_listener")" "$3") ;;
+    dial:Rust)     CMD=("$(exe "$RUST_DIR/target/debug/examples/noise_hfs_dialer")" "$3") ;;
+    *) die "unknown $1:$2" ;;
   esac
 }
 
@@ -121,7 +145,8 @@ run_one () { # L D rep
   local tag="${L}-listens_${D}-dials_r${rep}"
   local llog="$OUT/$tag.listener.log" dlog="$OUT/$tag.dialer.log"
 
-  $(cmd listen "$L" "$port") > "$llog" 2>&1 &
+  set_cmd listen "$L" "$port"
+  "${CMD[@]}" > "$llog" 2>&1 &
   local lpid=$!
   CURRENT_LPID=$lpid
   local ready=0
@@ -151,7 +176,8 @@ run_one () { # L D rep
     return
   fi
 
-  timeout "$DIAL_TIMEOUT" $(cmd dial "$D" "$port") > "$dlog" 2>&1
+  set_cmd dial "$D" "$port"
+  timeout "$DIAL_TIMEOUT" "${CMD[@]}" > "$dlog" 2>&1
   local dcode=$?
 
   local lcode=124
@@ -184,16 +210,16 @@ run_one () { # L D rep
   fi
 }
 
-for L in $IMPLS; do for D in $IMPLS; do for rep in $(seq 1 "$REPS"); do
+for L in "${IMPL_LIST[@]}"; do for D in "${IMPL_LIST[@]}"; do for rep in $(seq 1 "$REPS"); do
   run_one "$L" "$D" "$rep"
 done; done; done
 
 {
-  printf '| listener \\ dialer |'; for D in $IMPLS; do printf ' %s |' "$D"; done; echo
-  printf '|---|'; for _ in $IMPLS; do printf -- '---|'; done; echo
-  for L in $IMPLS; do
+  printf '| listener \\ dialer |'; for D in "${IMPL_LIST[@]}"; do printf ' %s |' "$D"; done; echo
+  printf '|---|'; for _ in "${IMPL_LIST[@]}"; do printf -- '---|'; done; echo
+  for L in "${IMPL_LIST[@]}"; do
     printf '| **%s** |' "$L"
-    for D in $IMPLS; do
+    for D in "${IMPL_LIST[@]}"; do
       n=$(awk -F'\t' -v l="$L" -v d="$D" '$1==l && $2==d && $4=="PASS"' "$OUT/results.tsv" | wc -l | tr -d ' ')
       printf ' %s/%s |' "$n" "$REPS"
     done; echo
