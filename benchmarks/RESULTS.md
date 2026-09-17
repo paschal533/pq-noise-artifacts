@@ -11,13 +11,22 @@ See `benchmarks/2026-09-17/SUMMARY.md` for the full cross-language write-up and 
 per language.
 
 **The whole machine was slower on 2026-09-17 than on 2026-09-10, across every language, before
-any ratio is taken.** AC power was confirmed on (`Win32_Battery.BatteryStatus=2`), power plan
-Balanced, same as recorded for the prior session; the cause of the slowdown is not established.
-Absolute medians: JS classical (native) 6.82 -> 15.40 ms (2.26x), JS hybrid (native)
+any ratio is taken.** AC power was checked after this run (not during) and found on
+(`Win32_Battery.BatteryStatus=2`), power plan Balanced; no AC-power or power-plan record exists
+from the 2026-09-10 session, so this is stated only as confirmed for this run, not as unchanged
+from any prior one. The cause of the slowdown is not established. Absolute medians (each
+language's own handshake-median figures, matching the tables elsewhere in this document): JS
+classical (native) 6.82 -> 15.40 ms (2.26x), JS hybrid (native)
 10.30 -> 24.10 ms (2.34x); Python classical 1.60 -> 3.35 ms (2.09x), Python hybrid
-17.07 -> 40.08 ms (2.35x), Python 1 KB post-handshake throughput 15.3 -> 8.9 MB/s (roughly
-halved); Rust classical 0.888 -> 1.57 ms (1.77x). Nim's slowdown was much smaller (classical
-2.943 -> 3.667 ms, 1.25x; hybrid 3.356 -> 4.358 ms, 1.30x, 8 Sept session against 2026-09-17).
+17.07 -> 40.08 ms (2.35x); Rust classical 0.888 -> 1.57 ms (1.77x, though see the note on
+statistics in the KEM-share section below — the 0.888 ms is a criterion point estimate, the 1.57
+ms a median-of-per-pass-medians, so this factor mixes two statistics). Nim's baseline is from a
+different, earlier session (8 September, not 10 September): classical 2.943 -> 3.667 ms (1.25x);
+hybrid 3.356 -> 4.358 ms (1.30x). Research Paper §7.1 (research-paper.md:651) records that this
+same machine ran roughly twice as fast on 10 September as on 8 September — day-to-day drift of
+that size is already documented for this machine, so no interpretation of Nim's slowdown factor
+relative to the other three languages' is offered here. (Python's post-handshake throughput also
+moved; see `benchmarks/2026-09-17/SUMMARY.md` for why it is not included in this table.)
 Because KEM cost and non-KEM cost need not scale together under whatever changed, **the
 classical-vs-hybrid ratios in this run may not be directly comparable to the 2026-09-10 ones**,
 even though each ratio is internally sound (computed within the same session, same machine
@@ -59,9 +68,13 @@ pure-JS backend (`kemCostPureJs`) and about 26.9 ms of backend substitution (`ba
 pure-JS classical minus native classical) — together about 33.6 ms, close to the 32.9 ms gap; the
 small residual is because a median of per-pass differences is not the same number as the
 difference of two medians. Holding the *native* backend constant on both sides instead gives a
-different quantity, the native-backend KEM cost: about 8.6 ms, roughly 36% of the 24.10 ms native
-hybrid handshake. These two KEM-cost figures (6.7 ms pure-JS, 8.6 ms native) are not the same
-measurement and should not be added to each other.
+different quantity, the native-backend KEM cost: about 8.6 ms (`kemCostNative`, the median of the
+5 per-pass native-hybrid-minus-native-classical differences), roughly 36% of the 24.10 ms native
+hybrid handshake. The KEM-share table below instead uses 8.70 ms, the *difference of the two
+pass-median figures* (24.10 - 15.40), a different statistic from the same two quantities — the
+two do not agree to the decimal for the same reason the 32.9 ms gap above does not exactly equal
+6.7 + 26.9. These KEM-cost figures (6.7 ms pure-JS-backend, 8.6 ms and 8.70 ms native-backend by
+two statistics) are not interchangeable and should not be added to each other.
 
 **KEM share, one method throughout.** Every KEM-share figure below is `(hybrid_ms -
 classical_ms) / hybrid_ms` (the "delta method"), matching Research Paper §7.7/§7.9. This is a
@@ -77,28 +90,45 @@ the same delta method from the paper's own medians, for comparison:
 
 | | overhead (2026-09-10) | overhead (2026-09-17) | KEM share, delta method (2026-09-10) | KEM share, delta method (2026-09-17) |
 |---|---:|---:|---:|---:|
-| Python (`kyber-py`) | 10.7x | **12.0x** (range 11.3-12.4) | ~91% (15.47/17.07) | ~92% (36.73/40.08) |
+| Python (`kyber-py`) | 10.7x\* | **12.0x** (range 11.3-12.4) | ~91% (15.47/17.07) | ~92% (36.73/40.08) |
 | **JavaScript** (`@noble/post-quantum`) | 1.51x | **1.56x** (range 1.51-1.60) | ~34% (3.48/10.30) | ~36% (8.70/24.10) |
-| Rust (RustCrypto `ml-kem`) | 1.24x | **1.32x** (range 1.23-1.61) | ~19% (0.211/1.099), upper bound | ~20% (0.39/1.96), upper bound |
-| Nim (BoringSSL) | 1.13x | **1.19x** (range 1.16-1.21) | ~12%\* (0.413/3.356) | ~16% (0.691/4.358) |
+| Rust (RustCrypto `ml-kem`) | 1.24x\*\* | **1.32x** (range 1.23-1.61) | ~19% (0.211/1.099), upper bound\*\* | ~20% (0.39/1.96), upper bound |
+| Nim (BoringSSL) | 1.13x | **1.19x** (range 1.16-1.21) | ~12% (0.413/3.356)\*\*\* | ~16% (0.691/4.358)\*\*\* |
 
-\* Nim's paper-published figure for 8 Sept was ~8.2%, computed by a different method (standalone
-KEM round-trip microbenchmark / hybrid handshake, 0.274/3.356). Recomputed here by the delta
-method for consistency with the rest of this table, 8 Sept gives ~12.3%. For continuity with the
-paper's own method, the 2026-09-17 harness's own per-pass "KEM fraction of XXhfs time" printout
-(same standalone method) has a five-pass median of 9.5% (values 8.9%, 8.9%, 9.5%, 12.2%, 13.0%).
-The three Python, JS and Rust rows use the same method the paper already used, so no comparable
-restatement is needed for them.
+\* Python's 10.7x came from a single unpaired (phase-separated) run; 12.0x is the median of 5
+passes of the newly paired harness (this task's Step 1). This row's shift therefore spans a
+method change as well as whatever else changed, and is not a like-for-like comparison the way
+the JS and Nim rows are (both already paired on 2026-09-10/8 Sept).
 
-Every overhead ratio moved from 2026-09-10, each by a different amount: JS +0.05x (~+3%), Rust
-+0.08x (~+6.5%), Nim +0.06x (~+5%), Python +1.3x (~+12%, the largest). None moved toward making
-the post-quantum handshake look cheaper. Under the one consistent (delta) method, KEM share moved
-far less than an earlier draft of this file claimed: Python is effectively unchanged (~91%->~92%),
-as are JS (~34%->~36%) and Rust (~19%->~20%); Nim's is the one KEM-share figure with a real move,
-~12%->~16% delta-method (or ~8.2%->~9.5% by the paper's original standalone method) — a real but
-modest shift, not the "largest single shift" an earlier draft attributed to Python by comparing
-two different formulas. See `benchmarks/2026-09-17/SUMMARY.md` for the Nim pass-to-pass latency
-swing and Rust's per-pass spread.
+\*\* Research Paper §7.8 states the Rust 0.888/1.099 ms figures are criterion *point estimates*
+(research-paper.md:872), not medians, unlike the `1.32x` figure above which is a median over 5
+pass-level medians (matching `rust-passes.tsv`). Recomputing this run's overhead with the same
+point-estimate statistic (median of the 5 per-pass criterion point-estimate ratios: 1.468, 1.945,
+1.324, 1.282, 1.338, from the `time: [.. X ..]` line in each pass) gives a median of 1.338x
+(range 1.28-1.94x) — a different number from 1.32x (1.23-1.61x) because it is a different
+statistic on the same data, not a discrepancy. Cross-date, using point estimates on both sides
+(classical median-of-point-estimates 1.4886 ms vs the paper's 0.888 ms point estimate) gives a
+slowdown of about 1.68x and a KEM share of about 24.5% ((1.9713-1.4886)/1.9713), both cited here
+for completeness and not folded into the `~20%` table cell above, which stays on the tsv-median
+statistic for consistency with the other three languages' table cells.
+
+\*\*\* Nim's paper-published figure for 8 Sept is ~8.2%, from a different method (the standalone
+KEM round-trip microbenchmark divided by the hybrid handshake median, 0.274/3.356), not the delta
+method used in this table. Recomputed by the delta method for consistency with the rest of this
+table, 8 Sept gives ~12.3% (shown rounded to ~12% above). This run's delta-method KEM share by
+pass (from each pass's own classical/hybrid medians in `nim-pass1.txt`.."nim-pass5.txt"): 17.5%,
+17.3%, 14.1%, 15.0%, 15.9% (median 15.9%, close to the ~16% table cell, which uses the
+pass-median-of-medians classical/hybrid figures instead of a per-pass series). For continuity
+with the paper's own (standalone) method, this run's harness-printed "KEM fraction of XXhfs
+time" has a five-pass median of 9.5% (8.9%, 8.9%, 9.5%, 12.2%, 13.0%). No interpretation of the
+size or direction of any of these Nim figures relative to 8 Sept is offered, given the machine's
+own documented day-to-day drift (research-paper.md:651, ~2x between 8 and 10 September).
+
+Every overhead ratio moved from 2026-09-10 (or 8 Sept for Nim), each by a different amount: JS
++0.05x (~+3%), Rust +0.08x (~+6.5%, tsv-median statistic), Nim +0.06x (~+5%), Python +1.3x
+(~+12%, the largest, and spanning a method change per the note above). None moved toward making
+the post-quantum handshake look cheaper. See `benchmarks/2026-09-17/SUMMARY.md` for the Nim
+pass-to-pass latency swing and Rust's per-pass spread.
 
 A lower ratio is not automatically better. Nim's is partly a larger denominator: only its KEM
 reaches BoringSSL, while its classical primitives come from BearSSL and pure Nim.
