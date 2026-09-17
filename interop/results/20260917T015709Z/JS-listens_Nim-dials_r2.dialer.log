@@ -1,0 +1,6 @@
+LOCAL 12D3KooWRKPwfqXYawMKM7cb6vyAoiJNfynnYbZ5bxicHbTSXp1t
+DIALING port 9407
+PEER 12D3KooWF5uFryVDKC1ehxsryHAFv5vGSJkmiDEgETBVBP5bocjJ
+RECV hello from JS
+SENT hello from Nim
+INTEROP_OK
