@@ -111,7 +111,12 @@ as passing when the dialer exited cleanly and printed a peer identity, and no tr
 exchanged; the Python dialer was also a standalone re-implementation of the handshake rather than
 py-libp2p's `PatternXXhfs`. The
 previous version also said the Rust tree provided a listener example but no dialer. That listener
-was ours, from `royzah/rust-libp2p#1`, not part of #6481. The matrix above replaces those claims.
+was ours, from `royzah/rust-libp2p#1`, not part of #6481. Those earlier Rust runs also predate
+royzah's current code: they used our `royzah/rust-libp2p#1` branch, whose `Cargo.lock` pins
+`royzah/snow` at commit `407dd90` of 14 June 2026, which still spelled the suite `ML-KEM-768`.
+royzah renamed it to `MLKEM768` on 17 August 2026 (rust-libp2p `e7a1286`, snow `858dc27`), and that
+change reached #6481 only with the force-push of 16 September 2026. The matrix above replaces those
+claims.
 
 **The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
 written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
