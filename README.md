@@ -128,7 +128,7 @@ evidence that the specification is unambiguous at the wire level.
 ## Headline result
 
 Measured with the cryptographic backend held constant, the post-quantum hybrid handshake costs
-**1.51x** a classical one, per-pass range 1.51 to 1.58. Comparing the two *default*
+**1.51x** a classical one, per-pass range 1.51 to 1.61. Comparing the two *default*
 configurations instead gives 3.54x, but `noise()` defaults to a native backend while
 `noiseHFS()` defaults to a pure-JavaScript one, so that comparison varies the backend alongside
 the KEM. Of the 17.3 ms between the defaults, over four fifths is the backend substitution and

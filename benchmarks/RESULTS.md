@@ -97,7 +97,7 @@ ones.
 |---|---|---|---:|---|---|---:|---|
 | JavaScript | Classical handshake, native backend | 2026-09-10 | 6.82 ms | "Medians across five serial passes" (:692); the same value also appears in the table introduced as "Medians of thirty iterations, four repetitions" (:703) | :696, :707 | 15.40 ms | median of the 5 pass-level medians (`summary.medians.xxNative`, `js-paired-passes.json`) |
 | JavaScript | Hybrid handshake, native backend | 2026-09-10 | 10.30 ms | "Medians of thirty iterations, four repetitions" (:703) | :710 | 24.10 ms | median of the 5 pass-level medians (`summary.medians.hfsNative`, `js-paired-passes.json`) |
-| JavaScript | Like-for-like overhead | 2026-09-10 | 1.51x | as published; "Precision" row reads "1.51–1.58 (5 passes)" (:891) | :890, :891 | -- | -- |
+| JavaScript | Like-for-like overhead | 2026-09-10 | 1.51x | as published in the 14 September draft; its "Precision" row read "1.51–1.58 (5 passes)" (:891), which quoted the median-of-per-iteration-ratios spread under a ratio-of-medians headline and was corrected to "1.51–1.61 (5 passes)" on 17 September | :890, :891 | -- | -- |
 | JavaScript | KEM share of XXhfs | 2026-09-10 | ~34% | as published | :893 | -- | -- |
 | Python | Classical handshake | 2026-09-10 | 1.60 ms | "Medians across five serial passes" (:833); column header "Median ms/op" (:835) | :841 | 3.35 ms | median of the 5 per-pass medians (`python-pass1.txt` through `python-pass5.txt`; each a median over 50 handshakes) |
 | Python | Hybrid handshake | 2026-09-10 | 17.07 ms | "Medians across five serial passes" (:833); column header "Median ms/op" (:835) | :842 | 40.08 ms | median of the 5 per-pass medians (as for classical) |
