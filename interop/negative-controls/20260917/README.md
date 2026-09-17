@@ -35,7 +35,7 @@ should fail at the first AEAD decryption, and same-implementation pairings shoul
 All six cross-implementation pairings failed, each with the dialer failing AEAD tag
 authentication or decryption while reading message B; the listeners then saw the connection close.
 The four same-implementation pairings passed (JS against JS once in each subdirectory). Each
-subdirectory holds the runner's `matrix.md`, `results.tsv` and per-run logs.
+subdirectory holds the runner's `matrix.md`, `results.tsv`, `versions.txt` and per-run logs.
 
 ## B: fabricated identity (`B-fake-identity/`)
 
@@ -52,5 +52,7 @@ mismatch.
 
 ## Not included
 
-The per-subdirectory `versions.txt` files and the combined console transcript are not published
-because they contain local filesystem paths. The revisions they record are the ones listed above.
+The combined console transcript is not published because it contains local filesystem paths. In
+the per-subdirectory `versions.txt` files, local directory paths were redacted to repository names
+before publication; `wt-js-oldname` is the temporary worktree holding the modified TypeScript
+build, which is why it is recorded as `1_dirty`.

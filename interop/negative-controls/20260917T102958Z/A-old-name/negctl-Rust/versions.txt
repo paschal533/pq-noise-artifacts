@@ -1,0 +1,9 @@
+date_utc 2026-09-17T10:39:03Z
+JS_DIR wt-js-oldname c8a07cfb42195601e1a8cf3a7ec7f0c5031f4dc9 1_dirty
+PY_DIR py-libp2p 8e12d0138c64fa5b0285d7de036ed1b23f473739 0_dirty
+NIM_DIR nim-libp2p eeff6254eb9a30abb5113a4e8b6af755a41b97b0 0_dirty
+RUST_DIR wt-rust-rename b68fe1021c08690c11bdecd814fae1c63fdb2d01 0_dirty
+v22.17.1
+Python 3.13.14
+Nim Compiler Version 2.2.10 [Windows: amd64]
+rustc 1.95.0 (59807616e 2026-04-14)
