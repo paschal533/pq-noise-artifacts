@@ -33,6 +33,16 @@ DIAL_TIMEOUT=60       # seconds
 OUT="${OUT:-$HERE/results/$(date -u +%Y%m%dT%H%M%SZ)}"
 mkdir -p "$OUT"
 
+# `timeout` must resolve to GNU coreutils' timeout, not
+# C:\Windows\System32\timeout.exe (an interactive countdown tool with
+# unrelated flags/semantics that would silently break the dial-side bound if
+# PATH ordering ever put it first).
+timeout_version="$(timeout --version 2>/dev/null | head -1)"
+case "$timeout_version" in
+  *coreutils*|*GNU*) ;;
+  *) echo "ERROR timeout is not GNU coreutils (found: $(command -v timeout))" >&2; exit 2 ;;
+esac
+
 exe () { if [ -x "$1.exe" ]; then echo "$1.exe"; else echo "$1"; fi; }
 
 cmd () { # role impl port
@@ -112,7 +122,32 @@ run_one () { # L D rep
   $(cmd listen "$L" "$port") > "$llog" 2>&1 &
   local lpid=$!
   CURRENT_LPID=$lpid
-  for _ in $(seq 1 $READY_TICKS); do tr -d '\r' < "$llog" | grep -q '^READY ' && break; sleep 0.2; done
+  local ready=0
+  for _ in $(seq 1 $READY_TICKS); do
+    tr -d '\r' < "$llog" | grep -q '^READY ' && { ready=1; break; }
+    # Listener already exited without ever printing READY (e.g. exec
+    # failure on a missing binary) — no point burning the rest of the
+    # READY_TICKS budget waiting for a line that can now never appear.
+    kill -0 "$lpid" 2>/dev/null || break
+    sleep 0.2
+  done
+
+  if [ "$ready" -ne 1 ]; then
+    # Listener never signalled READY: don't launch a dialer that can only
+    # hang or race a not-yet-listening port. Kill it, fail fast, and record
+    # why (plus its exit code if it already died on its own).
+    local why="listener_no_READY "
+    if ! kill -0 "$lpid" 2>/dev/null; then
+      wait "$lpid"; local lcode=$?
+      why+="listener_exit=$lcode "
+    fi
+    kill_pid "$lpid"
+    CURRENT_LPID=""
+    : > "$dlog"
+    FAIL=$((FAIL + 1)); printf '%s\t%s\t%s\tFAIL\t%s\n' "$L" "$D" "$rep" "$why" >> "$OUT/results.tsv"
+    echo "FAIL  $tag  ($why)"
+    return
+  fi
 
   timeout "$DIAL_TIMEOUT" $(cmd dial "$D" "$port") > "$dlog" 2>&1
   local dcode=$?
