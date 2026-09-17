@@ -78,8 +78,9 @@ Run directory: [`interop/results/20260917T015709Z/`](interop/results/20260917T01
 
 - both processes exit 0 and print `INTEROP_OK`;
 - the listener's `PEER` equals the dialer's `LOCAL` and the dialer's `PEER` equals the listener's
-  `LOCAL`, so each side authenticated the other's real identity and both derived the same
-  handshake hash;
+  `LOCAL`, which requires each side to have decrypted the other's static key and payload (possible
+  only if both derived the same handshake hash) and to have verified the identity signature over
+  that static key;
 - the listener sends `hello from <Impl>` as an encrypted transport message, the dialer decrypts it
   and replies in kind, and each side's `RECV` line names the other implementation.
 
@@ -91,7 +92,7 @@ opposite states, a one-directional test leaves one transport key unverified, so 
 sends one message each way, and every pair runs in both orderings.
 
 Implementations tested (from `versions.txt`): JS `236525e`, Python `47c8f99b`, Nim `f9c959b`,
-Rust `cd0b0d9` (royzah's `a648280` plus our harness commits). Node.js v22.17.1, Python 3.13.14,
+Rust `cd0b0d9` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier (c2e4e30)). Node.js v22.17.1, Python 3.13.14,
 Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 machine. The
 harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
 so the run checks the handshake and transport encryption, not negotiation of the protocol id.
@@ -107,7 +108,8 @@ cross-check caught it.
 June to September 2026 and said the June 2026 triangle (TypeScript, Python, Rust) had exchanged an
 encrypted transport message after each handshake. It had not. The runner used then counted a pair
 as passing when the dialer exited cleanly and printed a peer identity, and no transport frames were
-exchanged; the Python dialer was also a standalone re-implementation rather than py-libp2p. The
+exchanged; the Python dialer was also a standalone re-implementation of the handshake rather than
+py-libp2p's `PatternXXhfs`. The
 previous version also said the Rust tree provided a listener example but no dialer. That listener
 was ours, from `royzah/rust-libp2p#1`, not part of #6481. The matrix above replaces those claims.
 
