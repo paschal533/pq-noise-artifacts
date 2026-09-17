@@ -6,8 +6,9 @@
 # pairs, and REPS repetitions each, a run PASSES only if:
 #   - both processes exit 0 and print INTEROP_OK,
 #   - the listener's PEER equals the dialer's LOCAL and vice versa
-#     (each side authenticated the other's real identity, so both derived the
-#     same handshake hash h), and
+#     (each side decrypted the other's static key and payload, possible only
+#     if both derived the same handshake hash h, and verified the identity
+#     signature over that static key), and
 #   - each side RECV'd exactly "hello from <the other implementation>"
 #     (one encrypted frame decrypted in each direction, so both split()
 #     cipher states are exercised).
