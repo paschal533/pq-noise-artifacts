@@ -29,13 +29,16 @@ alphanumeric characters and `/` in an algorithm name, so the profile is now
 `Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`; [@royzah](https://github.com/royzah) spotted it.
 The name is hashed into the handshake, so the two are not wire-compatible, and the protocol
 identifier moved from `/noise-mlkem768-hfs/0.1.0` to `/noise-mlkem768-hfs/0.2.0`. Message sizes
-are unchanged.
+are unchanged. `/noise-mlkem768-hfs/0.2.0` is what the four implementations ship, not a
+spec-endorsed identifier: [`libp2p/specs#727`](https://github.com/libp2p/specs/pull/727) writes
+`/noise-mlkem768-hfs/0.1.0` and lists the identifier string as the first of its open issues. The
+implementations will follow whatever #727 settles on.
 
 ## The work
 
 | | where |
 |---|---|
-| Specification | [`libp2p/specs#716`](https://github.com/libp2p/specs/pull/716) |
+| Specification | [`libp2p/specs#727`](https://github.com/libp2p/specs/pull/727), a Stage 1A Working Draft **by [@royzah](https://github.com/royzah)**. Not our work; our own draft, [`libp2p/specs#716`](https://github.com/libp2p/specs/pull/716), was closed on 2026-09-18 in favour of it and its material was offered to #727. The closed text stays readable at [paschal533/specs `noise-pq`](https://github.com/paschal533/specs/tree/master/noise-pq) |
 | TypeScript | [`ChainSafe/js-libp2p-noise#665`](https://github.com/ChainSafe/js-libp2p-noise/pull/665) |
 | Python | [`libp2p/py-libp2p#1310`](https://github.com/libp2p/py-libp2p/pull/1310) |
 | Nim | [`vacp2p/nim-libp2p#2811`](https://github.com/vacp2p/nim-libp2p/pull/2811) |
@@ -59,7 +62,8 @@ are unchanged.
 
 ## Interoperability
 
-Protocol identifier `/noise-mlkem768-hfs/0.2.0`. Every ordered pairing of the four
+Protocol identifier `/noise-mlkem768-hfs/0.2.0`, as shipped by the four implementations (see the
+note above on #727's open identifier question). Every ordered pairing of the four
 implementations, including each against itself, was run three times on 2026-09-17:
 **48 runs, 48 passed**, with **no implementation requiring a protocol change to interoperate
 with any other**.
