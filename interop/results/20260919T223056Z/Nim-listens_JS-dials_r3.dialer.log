@@ -1,0 +1,5 @@
+LOCAL 12D3KooWJ4am9vn3o1r2RBj8LuaUzrjywLMnJk4pY6RoUzZJaaYv
+PEER 12D3KooWK7W3UsbvCbrqgeXeNCKScmzNjEMLbn3s96nXwEgXePqK
+RECV hello from Nim
+SENT hello from JS
+INTEROP_OK

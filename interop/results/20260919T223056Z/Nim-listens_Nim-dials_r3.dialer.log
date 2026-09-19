@@ -1,0 +1,6 @@
+LOCAL 12D3KooWGSd4khE4Zy4HkmhXzd85PsE7dSuKcAnKdjUzMen2on4r
+DIALING port 9432
+PEER 12D3KooWLDBNynQungaHuhYf9RomrWicBDNnRnGvXxsMqM9GFGZ1
+RECV hello from Nim
+SENT hello from Nim
+INTEROP_OK
