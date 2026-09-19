@@ -1,2 +1,28 @@
 node_modules/
+
+# Logs are ignored by default, with three deliberate exceptions below.
+#
+# The run logs under interop/results/, interop/negative-controls/ and
+# benchmarks/ are PUBLISHED EVIDENCE, not incidental output: the interop
+# claim is graded from them, so they are committed on purpose. 460 of them
+# are tracked today (`git ls-files '*.log' | wc -l`).
+#
+# They were originally force-added past the bare `*.log` rule. That was
+# fragile: once a path is tracked, .gitignore no longer applies to it, so
+# `git add -A` stages further edits to those files with no warning, while
+# the rule still reads as if all logs were ignored. The negations below make
+# the intent explicit, so nobody adds a log to one of these directories
+# assuming it will be ignored, and nobody deletes the rule assuming the
+# tracked logs are accidents.
+#
+# Before committing new logs, check them for machine detail: grep tracked
+# files for Windows and POSIX home-directory prefixes, and for non-loopback
+# IPv4. Measured 2026-09-19, the tracked logs carry neither. The only
+# address appearing in any of the 460 is 127.0.0.1, and no tracked file
+# matches a home-directory prefix. That follows from the harnesses binding
+# to loopback and the runner recording directory basenames rather than
+# paths; it is not a guarantee about future logs.
 *.log
+!interop/results/**/*.log
+!interop/negative-controls/**/*.log
+!benchmarks/**/*.log
