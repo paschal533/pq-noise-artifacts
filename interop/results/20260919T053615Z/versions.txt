@@ -1,0 +1,10 @@
+date_utc 2026-09-19T05:36:16Z
+# fields: var basename remote branch commit dirty_lines
+JS_DIR wt-js-rename https://github.com/ChainSafe/js-libp2p-noise.git js-mlkem768-rename 0c55599853193397506ff33387fdd7636ccd4d42 0_dirty
+PY_DIR py-libp2p https://github.com/paschal533/py-libp2p.git feat/pqc-noise-xxhfs 0a61a1fe9333f18cb28ad4b4a89979aff9597f48 0_dirty
+NIM_DIR nim-libp2p https://github.com/vacp2p/nim-libp2p.git feat/noise-hfs-pqc 824cce0e28b2b62c89ec0773d3e368731253f5e4 0_dirty
+RUST_DIR wt-rust-rename https://github.com/royzah/rust-libp2p.git pr1-rebuild bdd417e2c2526d5dbfafa55cb4a89bf7132236fe 0_dirty
+v22.17.1
+Python 3.13.14
+Nim Compiler Version 2.2.10 [Windows: amd64]
+rustc 1.95.0 (59807616e 2026-04-14)

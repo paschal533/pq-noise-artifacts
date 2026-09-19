@@ -1,0 +1,5 @@
+LOCAL 12D3KooW9qcyxCbbTKfrMKqzkiS5ej8uvrSpGoqpnPzYpFtHgFgg
+PEER 12D3KooWGyyicNmSoUsEPa5zc6FV6YzMztdKrV3zUFBp2kBC46bn
+RECV hello from JS
+SENT hello from Python
+INTEROP_OK
