@@ -1,0 +1,11 @@
+{
+  "name": "libp2p-downgrade-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "On-path demonstration that a libp2p security-protocol downgrade forces two hybrid-capable peers onto classical /noise, undetected.",
+  "scripts": {
+    "demo": "node run-demo.mjs"
+  },
+  "license": "Apache-2.0 OR MIT"
+}

@@ -1,0 +1,70 @@
+libp2p security-protocol downgrade demonstration (loopback only)
+implementation under test : @chainsafe/libp2p-noise@17.0.0 (wt-js-rename)
+  git                     : js-mlkem768-rename @ 0c55599853193397506ff33387fdd7636ccd4d42 (clean)
+  node / libp2p           : v22.17.1 / libp2p@3.1.2
+node_modules link         : pre-existing (-> implementation node_modules)
+hybrid protocol id        : /noise-mlkem768-hfs/0.2.0
+classical protocol id     : /noise
+
+=== PHASE: baseline-direct ===
+  negotiated encrypter (dialer view)   : /noise-mlkem768-hfs/0.2.0
+  negotiated encrypter (listener view) : /noise-mlkem768-hfs/0.2.0
+  dialer verified remote == listener   : true
+  listener verified remote == dialer   : true
+  echo round-trip over the session     : OK ("PING-downgrade-demo")
+  both peers on hybrid                 : true
+  both peers on classical /noise       : false
+  peer store (dialer's record of listener):
+    {"id":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":["/ip4/127.0.0.1/tcp/57449"],"metadataKeys":["last-dial-success"],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  peer store (listener's record of dialer):
+    {"id":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":[],"metadataKeys":[],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  multistream-select wire observation:
+    (no intermediary; nothing observed on the wire)
+
+=== PHASE: baseline-tap ===
+  negotiated encrypter (dialer view)   : /noise-mlkem768-hfs/0.2.0
+  negotiated encrypter (listener view) : /noise-mlkem768-hfs/0.2.0
+  dialer verified remote == listener   : true
+  listener verified remote == dialer   : true
+  echo round-trip over the session     : OK ("PING-downgrade-demo")
+  both peers on hybrid                 : true
+  both peers on classical /noise       : false
+  peer store (dialer's record of listener):
+    {"id":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":["/ip4/127.0.0.1/tcp/51166"],"metadataKeys":["last-dial-success"],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  peer store (listener's record of dialer):
+    {"id":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":[],"metadataKeys":[],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  multistream-select wire observation:
+    [dialer->listener] forward  "/multistream/1.0.0"
+    [dialer->listener] forward  "/noise-mlkem768-hfs/0.2.0"
+    [dialer->listener] (raw relay from here: negotiation settled (last frame "/noise-mlkem768-hfs/0.2.0"); switching to raw relay)
+    [listener->dialer] forward  "/multistream/1.0.0"
+    [listener->dialer] forward  "/noise-mlkem768-hfs/0.2.0"
+    [listener->dialer] (raw relay from here: negotiation settled (last frame "/noise-mlkem768-hfs/0.2.0"); switching to raw relay)
+
+=== PHASE: attack ===
+  negotiated encrypter (dialer view)   : /noise
+  negotiated encrypter (listener view) : /noise
+  dialer verified remote == listener   : true
+  listener verified remote == dialer   : true
+  echo round-trip over the session     : OK ("PING-downgrade-demo")
+  both peers on hybrid                 : false
+  both peers on classical /noise       : true
+  peer store (dialer's record of listener):
+    {"id":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":["/ip4/127.0.0.1/tcp/51170"],"metadataKeys":["last-dial-success"],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  peer store (listener's record of dialer):
+    {"id":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","protocols":["/downgrade-demo/echo/1.0.0"],"addresses":[],"metadataKeys":[],"tagKeys":[],"hasPeerRecordEnvelope":false,"recordsEncrypter":false,"recordsNoiseStaticKey":false}
+  multistream-select wire observation:
+    [dialer->listener] forward  "/multistream/1.0.0"
+    [dialer->listener] REWRITE "/noise-mlkem768-hfs/0.2.0" -> "/noise-mlkem768-xxx/0.2.0"
+    [dialer->listener] (raw relay from here: negotiation settled (last frame "/noise-mlkem768-hfs/0.2.0"); switching to raw relay)
+    [listener->dialer] forward  "/multistream/1.0.0"
+    [listener->dialer] forward  "na"
+    [listener->dialer] forward  "/noise"
+    [listener->dialer] (raw relay from here: negotiation settled (last frame "/noise"); switching to raw relay)
+
+=== VERDICT ===
+  DOWNGRADE SUCCEEDED: both peers negotiated the hybrid encrypter when unobstructed,
+  and both silently completed a mutually authenticated CLASSICAL /noise session when the
+  on-path proxy stripped the hybrid proposal. Neither peer signalled an error.
+
+Raw results written to output/results.json and output/transcript-*.json

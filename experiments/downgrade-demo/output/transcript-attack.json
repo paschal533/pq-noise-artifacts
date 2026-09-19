@@ -1,0 +1,39 @@
+[
+  {
+    "dir": "dialer->listener",
+    "action": "forward",
+    "protocol": "/multistream/1.0.0"
+  },
+  {
+    "dir": "dialer->listener",
+    "action": "rewrite",
+    "from": "/noise-mlkem768-hfs/0.2.0",
+    "to": "/noise-mlkem768-xxx/0.2.0",
+    "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+  },
+  {
+    "dir": "dialer->listener",
+    "action": "relay-start",
+    "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "forward",
+    "protocol": "/multistream/1.0.0"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "forward",
+    "protocol": "na"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "forward",
+    "protocol": "/noise"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "relay-start",
+    "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+  }
+]

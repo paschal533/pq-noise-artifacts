@@ -1,0 +1,6 @@
+# node_modules here is a link to the implementation checkout's node_modules,
+# created by setup.mjs at run time. Never commit it.
+node_modules/
+
+# The output/ directory is intentionally committed as evidence (results.json,
+# transcript-*.json, console-log.txt). Do not ignore it.
