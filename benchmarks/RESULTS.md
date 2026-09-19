@@ -90,12 +90,20 @@ reproduce this file's own 12.0x above, and should not be expected to: that figur
 session, a different sampling design and a machine running roughly half as fast in absolute
 terms (this run's classical Python handshake is 3.35 ms against 2.25 to 2.30 ms here).
 
-KEM microbenchmarks from the same day: an encapsulate-plus-decapsulate round trip measured about
-0.45 ms C-backed against about 16.6 ms on `kyber-py` in the block adjacent to the paired passes,
-roughly 37x; a later block, with the machine running close to half as fast in absolute terms,
-measured 0.91 ms against 34.8 ms, which is 38x. The absolute milliseconds move with the machine
-and the ratio does not, so the ratio is the figure to quote. An earlier one-off probe reported
-47.8x; it does not reproduce under repeated paired sampling and is withdrawn.
+**The KEM microbenchmarks are unstable in both absolute terms and ratio.** Across four
+measurement sessions the C-backed-to-`kyber-py` ratio on an encapsulate-plus-decapsulate round
+trip came out at 33x, 37x, 38x and 43x, while `kyber-py`'s own absolute round trip swung by
+roughly a factor of two within a single day: about 16.6 ms in the block adjacent to the paired
+passes, against 34.8 ms in a later block the same day (0.45 ms and 0.91 ms C-backed
+respectively). The ratio should be read as one to two orders of magnitude, not as a figure. An
+earlier one-off probe reported 47.8x; it does not reproduce and is withdrawn.
+
+An earlier version of this section claimed the absolute milliseconds moved with the machine
+while the ratio did not. That was inferred from the two blocks above, which happen to agree at
+37x and 38x; the 33x and 43x sessions show it does not hold, and the claim is withdrawn. The
+paired *handshake* ratios are a different matter and are stable: 1.42x to 1.44x and 10.76x to
+10.87x across their passes, because each arm carries its own classical baseline within the same
+pass.
 
 Nothing on the wire changes: both backends produce a 1,184-byte encapsulation key, a 1,088-byte
 ciphertext and a 32-byte shared secret, a ciphertext from either decapsulates to the same shared
