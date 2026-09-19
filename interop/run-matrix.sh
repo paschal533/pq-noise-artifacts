@@ -23,9 +23,17 @@
 # so that PYTHONPATH=$PY_DIR resolves the right package. PYTHON is one
 # executable path (it may contain spaces), not a command line.
 #
+# OUT is where the run writes versions.txt, results.tsv, matrix.md and two
+# logs per run. Leave it unset for interop/results/<UTC timestamp>, or set it
+# to put a run elsewhere. If it is set it must be non-empty, must not contain
+# '..', and must name a directory that does not exist or is empty: the script
+# refuses to add a run to a directory that already holds files, rather than
+# silently mixing or overwriting two runs' output.
+#
 # IMPLS must name known implementations, REPS must be a positive integer and
 # BASE_PORT a port such that every run's port stays <= 65535; otherwise the
-# script prints ERROR and exits 2 before starting anything.
+# script prints ERROR and exits 2 before starting anything. OUT is validated
+# in the same place, before any directory is created or process started.
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -36,7 +44,11 @@ REPS="${REPS:-3}"
 PORT="${BASE_PORT:-9400}"
 READY_TICKS=150       # x 0.2 s
 DIAL_TIMEOUT=60       # seconds
-OUT="${OUT:-$HERE/results/$(date -u +%Y%m%dT%H%M%SZ)}"
+# ${OUT-...}, not ${OUT:-...}: an unset OUT takes the default, but an OUT that
+# is set to the empty string is a configuration mistake (an empty env: entry in
+# a workflow, say) and is rejected below rather than silently writing the run
+# into the repository's own results/ directory.
+OUT="${OUT-$HERE/results/$(date -u +%Y%m%dT%H%M%SZ)}"
 KNOWN_IMPLS=(JS Python Nim Rust)
 
 die () { echo "ERROR $*" >&2; exit 2; }
@@ -54,7 +66,27 @@ done
 LAST_PORT=$((PORT + ${#IMPL_LIST[@]} * ${#IMPL_LIST[@]} * REPS - 1))
 [ "$LAST_PORT" -le 65535 ] || die "BASE_PORT=$PORT needs ports up to $LAST_PORT, beyond 65535"
 
-mkdir -p "$OUT"
+# OUT decides where every file this script writes lands, so validate it
+# alongside its siblings rather than trusting it.
+case "$OUT" in
+  "")   die "OUT is set but empty (unset it to use the default results directory)" ;;
+  *..*) die "OUT must not contain '..' (got '$OUT')" ;;
+esac
+if [ -e "$OUT" ] && [ ! -d "$OUT" ]; then
+  die "OUT exists and is not a directory: $OUT"
+fi
+# Never add a run to a directory that already holds one. Two runs sharing an
+# OUT interleave their appends to results.tsv and overwrite each other's
+# versions.txt and matrix.md, which is silent and produces a corrupt matrix.
+if [ -d "$OUT" ] && [ -n "$(ls -A "$OUT" 2>/dev/null)" ]; then
+  die "OUT already exists and is not empty, refusing to overwrite: $OUT"
+fi
+mkdir -p "$OUT" || die "cannot create output directory: $OUT"
+
+# noclobber: every file below is written exactly once, so a '>' that would
+# truncate an existing file, or follow a symlink planted at a predictable
+# results path, now fails instead of succeeding quietly.
+set -C
 
 # `timeout` must resolve to GNU coreutils' timeout, not
 # C:\Windows\System32\timeout.exe (an interactive countdown tool with
@@ -128,13 +160,38 @@ cleanup () {
 }
 trap cleanup EXIT INT TERM
 
+# A commit SHA on its own does not tell a reader which repository or branch to
+# fetch it from, and a local directory basename (wt-js-rename) is not a
+# published pointer to anything. Record the origin URL and the branch as well.
+#
+# Still no local filesystem paths: the basename is published rather than the
+# absolute path (that was deliberate and stays), and a remote URL that is
+# itself a local path or a file:// URL is replaced by a placeholder rather
+# than published.
+scrub_remote () { # url
+  case "$1" in
+    "")                                       printf 'no-remote' ;;
+    http://*|https://*|git://*|ssh://*)       printf '%s' "$1" ;;
+    *@*:*)                                    printf '%s' "$1" ;;  # scp-style git@host:path
+    *)                                        printf 'local-or-file-url-redacted' ;;
+  esac
+}
+git_or () { # dir fallback args...
+  local dir="$1" fallback="$2" v; shift 2
+  v="$(git -C "$dir" "$@" 2>/dev/null)" && [ -n "$v" ] || v="$fallback"
+  printf '%s' "$v"
+}
+
 {
   echo "date_utc $(date -u +%FT%TZ)"
-  # Record the repository directory's basename, not its absolute path, so
-  # published results carry no local filesystem paths.
+  echo "# fields: var basename remote branch commit dirty_lines"
   for d in JS_DIR PY_DIR NIM_DIR RUST_DIR; do
     dir="${!d}"
-    echo "$d $(basename "$dir") $(git -C "$dir" rev-parse HEAD 2>/dev/null) $(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
+    echo "$d $(basename "$dir")" \
+         "$(scrub_remote "$(git -C "$dir" remote get-url origin 2>/dev/null)")" \
+         "$(git_or "$dir" unknown-branch rev-parse --abbrev-ref HEAD)" \
+         "$(git_or "$dir" unknown-commit rev-parse HEAD)" \
+         "$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
   done
   node -v; "$PYTHON" --version; nim -v 2>/dev/null | head -1; rustc --version
 } > "$OUT/versions.txt" 2>&1
