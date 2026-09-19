@@ -65,10 +65,42 @@ each row names the statistic behind each input:
 
 | | overhead, this run | overhead statistic | KEM share, this run (delta method) | KEM-share inputs |
 |---|---:|---|---:|---|
-| Python (`kyber-py`) | 12.0x (range 11.3-12.4) | median and range of the 5 per-pass values, each the median of 50 paired per-iteration ratios | ~92% (36.73/40.08) | 40.08 and 3.35 ms: medians of the 5 per-pass handshake medians |
+| Python (`kyber-py`, the default until 2026-09-19) | 12.0x (range 11.3-12.4) | median and range of the 5 per-pass values, each the median of 50 paired per-iteration ratios | ~92% (36.73/40.08) | 40.08 and 3.35 ms: medians of the 5 per-pass handshake medians |
 | **JavaScript** (`@noble/post-quantum`) | 1.56x (range 1.51-1.60) | median and range of the 5 per-pass values, each the median of 30 per-iteration ratios, native backend on both sides | ~36% (8.70/24.10) | 24.10 and 15.40 ms: medians of the 5 pass-level medians, native backend |
 | Rust (RustCrypto `ml-kem`) | 1.32x (range 1.23-1.61) | median and range of the 5 per-pass ratios of `estimates.json` medians (via `rust-passes.tsv`) | ~20% (0.39/1.96), upper bound | 1.96 and 1.57 ms: medians of the 5 per-pass `estimates.json` medians (via `rust-passes.tsv`) |
 | Nim (BoringSSL) | 1.19x (range 1.16-1.21) | median and range of the 5 per-pass ratios of the hybrid median to the classical median | per pass 17.5%, 17.3%, 14.1%, 15.0%, 15.9% (median 15.9%) | each pass's own classical and hybrid harness medians (`nim-pass1.txt` through `nim-pass5.txt`), one share per pass |
+
+**Update, 2026-09-19: the Python row above is a `kyber-py` measurement and the backend has since
+changed.** py-libp2p `c8d16e63` makes `MLKEM768NativeKem` the default, reaching ML-KEM-768 in C
+through the `cryptography` package (OpenSSL 3.5+, AWS-LC or BoringSSL), with `kyber-py` kept as a
+pure-Python fallback behind a warning. Both backends were then measured as alternating paired
+arms of a single session, four passes of thirty iterations, each pass interleaving classical and
+hybrid handshakes with the leading protocol alternating:
+
+| Python arm | classical `Noise_XX` | hybrid `Noise_XXhfs` | overhead | KEM share (delta method) |
+|---|---:|---:|---:|---:|
+| `kyber-py` (pure Python) | 2.25 to 2.30 ms | 24.73 to 25.31 ms | 10.76x to 10.87x | ~91% |
+| `MLKEM768NativeKem` (C-backed) | 2.05 to 2.21 ms | 2.99 to 3.15 ms | **1.42x to 1.44x** | ~30% |
+
+Ranges are the two pass medians for that arm; the overhead is the median of the per-iteration
+paired ratios within each pass. The `kyber-py` arm is the control: it returns 10.76x and 10.87x
+against the 10.7x published on 2026-09-10, and ~91% against the published ~91%, which is what
+makes this a before and after of one change rather than two benchmarks on two days. It does not
+reproduce this file's own 12.0x above, and should not be expected to: that figure is a different
+session, a different sampling design and a machine running roughly half as fast in absolute
+terms (this run's classical Python handshake is 3.35 ms against 2.25 to 2.30 ms here).
+
+KEM microbenchmarks from the same day: an encapsulate-plus-decapsulate round trip measured about
+0.45 ms C-backed against about 16.6 ms on `kyber-py` in the block adjacent to the paired passes,
+roughly 37x; a later block, with the machine running close to half as fast in absolute terms,
+measured 0.91 ms against 34.8 ms, which is 38x. The absolute milliseconds move with the machine
+and the ratio does not, so the ratio is the figure to quote. An earlier one-off probe reported
+47.8x; it does not reproduce under repeated paired sampling and is withdrawn.
+
+Nothing on the wire changes: both backends produce a 1,184-byte encapsulation key, a 1,088-byte
+ciphertext and a 32-byte shared secret, a ciphertext from either decapsulates to the same shared
+secret under the other, and the interop matrix re-ran at 48 of 48 with the C-backed backend on
+the Python side (`interop/results/20260919T110704Z/`).
 
 Nim's harness separately prints a "KEM fraction of XXhfs time", computed by a different method (a
 standalone KEM microbenchmark divided by the hybrid handshake, not the delta method): 13.0%,

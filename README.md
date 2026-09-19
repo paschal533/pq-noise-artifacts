@@ -56,7 +56,7 @@ implementations will follow whatever #727 settles on.
 | `benchmarks/paired-passes-results.json` | raw output |
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
 | `interop/run-matrix.sh` | the neutral runner for the bidirectional interop matrix |
-| `interop/results/20260919T053615Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs (the earlier runs `20260917T015709Z`, `20260917T102958Z`, `20260917T134954Z` and `20260917T213457Z`, superseded, are kept beside it) |
+| `interop/results/20260919T110704Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs, the first run with the C-backed ML-KEM-768 backend on the Python side (the earlier runs `20260917T015709Z`, `20260917T102958Z`, `20260917T134954Z`, `20260917T213457Z` and `20260919T053615Z`, superseded, are kept beside it) |
 | `interop/negative-controls/20260917T134954Z/`, `interop/negative-controls/20260917/` | two negative controls showing the matrix checks can fail (control A, run with the `20260917T134954Z` matrix, in the first; control B in the second; `interop/negative-controls/20260917T102958Z/` holds control A for the superseded run `20260917T102958Z`) |
 | `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs`, `interop/interop-io.mjs` | reference copies of the TypeScript harnesses (the runner uses the JS repository's own copies) |
 
@@ -75,7 +75,7 @@ with any other**.
 | **Nim** | 3/3 | 3/3 | 3/3 | 3/3 |
 | **Rust** | 3/3 | 3/3 | 3/3 | 3/3 |
 
-Run directory: [`interop/results/20260919T053615Z/`](interop/results/20260919T053615Z/). Runner:
+Run directory: [`interop/results/20260919T110704Z/`](interop/results/20260919T110704Z/). Runner:
 [`interop/run-matrix.sh`](interop/run-matrix.sh). Every harness follows one stdout contract
 (`READY <port>` for listeners, then `LOCAL <peer-id>`, `PEER <peer-id>`,
 `SENT hello from <Impl>`, `RECV <line>`, and `INTEROP_OK` last). A run passes only if:
@@ -95,11 +95,16 @@ success, failing only on the first data frame. Because `split()` gives initiator
 opposite states, a one-directional test leaves one transport key unverified, so every run here
 sends one message each way, and every pair runs in both orderings.
 
-Implementations tested (from `versions.txt`): JS `0c55599`, Python `0a61a1fe`, Nim `824cce0`,
+Implementations tested (from `versions.txt`): JS `0c55599`, Python `c8d16e63`, Nim `b3f203d`,
 Rust `bdd417e` (royzah's `a648280` plus our harness commits and the move to the 0.2.0 identifier, `c2e4e30`). Node.js v22.17.1, Python 3.13.14,
 Nim 2.2.10, rustc 1.95.0. All runs were over loopback TCP on one Windows 11 machine. The
 harnesses start the hybrid handshake directly on the TCP connection, without multistream-select,
 so the run checks the handshake and transport encryption, not negotiation of the protocol id.
+The Python side of this run used `MLKEM768NativeKem`, the C-backed ML-KEM-768 backend that
+`make_fast_kem()` has selected by default since py-libp2p `c8d16e63`. None of the 96 logs carries
+the fallback warning that backend selection emits when it drops to `kyber-py`, which is the
+positive evidence that the C-backed path was the one under test. The wire format is unchanged:
+the same 48 of 48 ordered pairings pass against the TypeScript, Nim and Rust implementations.
 
 This run repeats the matrix after a round of security and robustness fixes landed in three of the
 four implementations: strict handshake length validation and a typed malformed-message error in
@@ -151,9 +156,28 @@ For context across implementations of the same protocol, holding each one's back
 between 1.1x and 1.5x. A lower ratio is not automatically better: Nim's is partly a larger
 denominator, since only its KEM reaches BoringSSL while its classical primitives do not.
 
-These are the figures the paper reports, from its September 2026 measurement sessions.
-[`benchmarks/RESULTS.md`](benchmarks/RESULTS.md) reports a 2026-09-17 re-run on the renamed
-suite, whose absolute latencies are not comparable with the published figures.
+**The Python figure has since been superseded within Python.** Every figure above names its KEM
+backend because the backend is what the figure is about, and Python's changed on 2026-09-19.
+py-libp2p now defaults to `MLKEM768NativeKem`, which reaches ML-KEM-768 in C through the
+`cryptography` package (OpenSSL 3.5+, AWS-LC or BoringSSL), and keeps `kyber-py` as a
+pure-Python fallback behind a warning. Measured as alternating paired arms of one session, four
+passes of thirty iterations, py-libp2p at `c8d16e63`:
+
+| Python arm | classical `Noise_XX` | hybrid `Noise_XXhfs` | overhead | KEM share |
+|---|---:|---:|---:|---:|
+| `kyber-py` (pure Python) | 2.25 to 2.30 ms | 24.73 to 25.31 ms | 10.76x to 10.87x | ~91% |
+| `MLKEM768NativeKem` (C-backed) | 2.05 to 2.21 ms | 2.99 to 3.15 ms | **1.42x to 1.44x** | ~30% |
+
+The `kyber-py` arm is the control, and it reproduces the 10.7x and the ~91% published from the
+10 September session, which is what makes this a before and after of one change rather than two
+benchmarks on two days. The wire format, the deterministic vectors and the interop matrix are
+unchanged. So the correct reading of the four-language table above is that Python's **10.7x is
+the `kyber-py` measurement**, retained because it is the control, and that the same
+implementation measures **1.42x** on the backend it now ships with.
+
+The four-language figures are the ones the paper reports, from its September 2026 measurement
+sessions. [`benchmarks/RESULTS.md`](benchmarks/RESULTS.md) reports a 2026-09-17 re-run on the
+renamed suite, whose absolute latencies are not comparable with the published figures.
 
 ## Licence
 

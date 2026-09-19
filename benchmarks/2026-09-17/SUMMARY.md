@@ -21,6 +21,16 @@ either beyond this run.
 
 ## This run's results
 
+> **Superseded for Python, 2026-09-19.** Every Python figure in this file is a `kyber-py`
+> measurement, which was the only ML-KEM-768 backend py-libp2p had on 2026-09-17. Since
+> py-libp2p `c8d16e63` the default is `MLKEM768NativeKem`, which reaches ML-KEM-768 in C through
+> the `cryptography` package, with `kyber-py` kept as a pure-Python fallback behind a warning. A
+> paired re-measurement of both arms in one session gives 1.42x to 1.44x C-backed against 10.76x
+> to 10.87x on `kyber-py`, with the KEM share falling from ~91% to ~30%; see the update in
+> [`../RESULTS.md`](../RESULTS.md). The `kyber-py` arm there reproduces the paper's published
+> 10.7x, not this file's 12.0x, because that is a different session and sampling design on a
+> machine running roughly half as fast. The other three languages in this file are unaffected.
+
 | Language | KEM library | Classical (ms, median of pass medians) | Hybrid (ms, median of pass medians) | Overhead, median | Overhead, range (min-max across passes) | Passes x iterations | Sampling |
 |---|---|---:|---:|---:|---:|---|---|
 | JavaScript | `@noble/post-quantum` 0.6.0 | 15.40 | 24.10 | 1.56x | 1.51-1.60x | 5 x 30 | Per-iteration paired (both protocols interleaved, order rotated each iteration), backend held constant (native); per-pass value is the median of the 30 per-iteration ratios; the table reports the median and range of the 5 pass-level medians. |
@@ -55,7 +65,7 @@ Rust, the medians of the 5 per-pass `estimates.json` medians via `rust-passes.ts
 
 | Language | KEM share (delta method) |
 |---|---:|
-| Python | ~92% (36.73/40.08) |
+| Python (`kyber-py`) | ~92% (36.73/40.08) |
 | JavaScript | ~36% (8.70/24.10) |
 | Rust | ~20% (0.39/1.96), upper bound -- the harness has no standalone KEM microbenchmark, so this attributes the whole classical-to-hybrid delta to the KEM |
 | Nim | per pass: 17.5%, 17.3%, 14.1%, 15.0%, 15.9% (median 15.9%), from each pass's own classical/hybrid medians in `nim-pass1.txt` through `nim-pass5.txt` |
