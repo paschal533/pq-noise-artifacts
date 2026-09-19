@@ -185,11 +185,20 @@ git_or () { # dir fallback args...
 {
   echo "date_utc $(date -u +%FT%TZ)"
   echo "# fields: var basename remote branch commit dirty_lines"
+  echo "# remote and branch come from a remote-tracking ref pointing at HEAD, so the pair is fetchable"
   for d in JS_DIR PY_DIR NIM_DIR RUST_DIR; do
     dir="${!d}"
+    ref="$(git -C "$dir" for-each-ref --points-at HEAD --format='%(refname:short)' refs/remotes 2>/dev/null | head -1)"
+    if [ -n "$ref" ]; then
+      rurl="$(scrub_remote "$(git -C "$dir" remote get-url "${ref%%/*}" 2>/dev/null)")"
+      rbranch="${ref#*/}"
+    else
+      rurl="unpublished"
+      rbranch="$(git_or "$dir" unknown-branch rev-parse --abbrev-ref HEAD)"
+    fi
     echo "$d $(basename "$dir")" \
-         "$(scrub_remote "$(git -C "$dir" remote get-url origin 2>/dev/null)")" \
-         "$(git_or "$dir" unknown-branch rev-parse --abbrev-ref HEAD)" \
+         "$rurl" \
+         "$rbranch" \
          "$(git_or "$dir" unknown-commit rev-parse HEAD)" \
          "$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
   done
