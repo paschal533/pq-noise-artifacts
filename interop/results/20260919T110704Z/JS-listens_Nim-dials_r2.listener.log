@@ -1,0 +1,6 @@
+LOCAL 12D3KooWCsxvr65zspoeVL5R5keq15xdtUym6pXvJUgFM6cL9RCK
+READY 9407
+PEER 12D3KooWJceTgpTRWLVfqZZXF5aKnKTqmnmetnaK7hyDkzEyLmN6
+SENT hello from JS
+RECV hello from Nim
+INTEROP_OK
