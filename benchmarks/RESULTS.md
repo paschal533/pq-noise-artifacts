@@ -108,7 +108,8 @@ pass.
 Nothing on the wire changes: both backends produce a 1,184-byte encapsulation key, a 1,088-byte
 ciphertext and a 32-byte shared secret, a ciphertext from either decapsulates to the same shared
 secret under the other, and the interop matrix re-ran at 48 of 48 with the C-backed backend on
-the Python side (`interop/results/20260919T110704Z/`).
+the Python side (`interop/results/20260919T223056Z/`, which supersedes `20260919T110704Z`; both
+ran the C-backed backend, and the later one also records fetchable `versions.txt` provenance).
 
 Nim's harness separately prints a "KEM fraction of XXhfs time", computed by a different method (a
 standalone KEM microbenchmark divided by the hybrid handshake, not the delta method): 13.0%,

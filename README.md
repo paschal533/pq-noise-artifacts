@@ -56,7 +56,7 @@ implementations will follow whatever #727 settles on.
 | `benchmarks/paired-passes-results.json` | raw output |
 | `benchmarks/backend-isolation.mjs` | isolates the crypto backend from the KEM |
 | `interop/run-matrix.sh` | the neutral runner for the bidirectional interop matrix |
-| `interop/results/20260919T110704Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs, the first run with the C-backed ML-KEM-768 backend on the Python side (the earlier runs `20260917T015709Z`, `20260917T102958Z`, `20260917T134954Z`, `20260917T213457Z` and `20260919T053615Z`, superseded, are kept beside it) |
+| `interop/results/20260919T223056Z/` | the matrix run: `matrix.md`, `results.tsv`, `versions.txt` and all 96 per-run logs. The first run whose `versions.txt` provenance is fetchable: remote and branch are derived from a remote-tracking ref pointing at HEAD, so every row resolves (the earlier runs `20260917T015709Z`, `20260917T102958Z`, `20260917T134954Z`, `20260917T213457Z`, `20260919T053615Z` and `20260919T110704Z`, superseded, are kept beside it) |
 | `interop/negative-controls/20260917T134954Z/`, `interop/negative-controls/20260917/` | two negative controls showing the matrix checks can fail (control A, run with the `20260917T134954Z` matrix, in the first; control B in the second; `interop/negative-controls/20260917T102958Z/` holds control A for the superseded run `20260917T102958Z`) |
 | `interop/node-listener.mjs`, `interop/noise-hfs-dial.mjs`, `interop/interop-io.mjs` | reference copies of the TypeScript harnesses (the runner uses the JS repository's own copies) |
 
@@ -75,7 +75,7 @@ with any other**.
 | **Nim** | 3/3 | 3/3 | 3/3 | 3/3 |
 | **Rust** | 3/3 | 3/3 | 3/3 | 3/3 |
 
-Run directory: [`interop/results/20260919T110704Z/`](interop/results/20260919T110704Z/). Runner:
+Run directory: [`interop/results/20260919T223056Z/`](interop/results/20260919T223056Z/). Runner:
 [`interop/run-matrix.sh`](interop/run-matrix.sh). Every harness follows one stdout contract
 (`READY <port>` for listeners, then `LOCAL <peer-id>`, `PEER <peer-id>`,
 `SENT hello from <Impl>`, `RECV <line>`, and `INTEROP_OK` last). A run passes only if:
