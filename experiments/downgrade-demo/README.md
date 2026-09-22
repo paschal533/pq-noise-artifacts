@@ -60,14 +60,14 @@ it.
 The run is deterministic and re-runnable. It exits `0` on success and writes:
 
 - `output/results.json` : structured result of every phase plus provenance.
-- `output/transcript-baseline-tap.json` and `output/transcript-attack.json` :
-  the exact multistream-select frames observed on the wire, with the attacker's
-  single edit recorded.
+- `output/transcript-*.json` : the exact multistream-select frames observed on
+  the wire for each relayed phase, with the attacker's single edit recorded.
 - `output/console-log.txt` : the full human-readable console output.
 
 ## What the output means
 
-Three phases run:
+Five phases run. The first three demonstrate the attack, the last two
+re-run it against the transcript-bound defence:
 
 1. **baseline-direct** : dialer connects straight to the listener, no
    intermediary. Both peers negotiate `/noise-mlkem768-hfs/0.2.0`. This is the
@@ -82,6 +82,21 @@ Three phases run:
    transcript shows the hybrid proposal rewritten, the listener answering `na`,
    the dialer proposing `/noise`, and the listener selecting `/noise`. Both peers
    report `connection.encryption === '/noise'`.
+
+4. **baseline-tap-defended** : same passive relay as phase 2, but both peers
+   enable transcript-bound negotiation (`transcriptBinding` in enforce mode,
+   offering the same two protocols). Both still negotiate
+   `/noise-mlkem768-hfs/0.2.0`. This is the false-positive control: the defence
+   must not break an honest connection.
+5. **attack-defended** : the same active rewrite as phase 3, against defended
+   peers. No session is established. The dialer refuses with
+   `ERR_SECURITY_PROTOCOL_DOWNGRADE`, naming the protocol that should have been
+   negotiated and the two offers that imply it.
+
+Phases 4 and 5 are what turns the finding into a fix: the attacker's single
+edit is unchanged, and the outcome moves from a silently downgraded working
+session to no session at all. See `TRANSCRIPT_BINDING_SPEC.md` in the
+implementation checkout for the mechanism and its measured cost.
 
 For every connected phase the harness records, on **both** peers:
 
@@ -115,6 +130,12 @@ what is actually observable:
 
 The observed result matches the audit's A-1 analysis: the downgrade is silent and
 leaves no artifact on either side that libp2p compares.
+
+The defended phases add a fifth channel that is not empty: each peer states its
+offered protocol list inside the encrypted handshake payload, signed and bound
+to the Noise transcript, so each side can recompute what the negotiation should
+have produced and compare it with what it actually got. That comparison is the
+one signal the four channels above could not provide.
 
 ## Exact versions and commits used
 

@@ -1,12 +1,12 @@
 {
-  "when": "2026-09-19T23:14:27.178Z",
+  "when": "2026-09-21T22:18:31.222Z",
   "provenance": {
     "implementation": "wt-js-rename",
     "packageName": "@chainsafe/libp2p-noise",
     "packageVersion": "17.0.0",
-    "gitHead": "0c55599853193397506ff33387fdd7636ccd4d42",
+    "gitHead": "d9130953cf33d8eb1c6f60f81e3208ac1dd5b099",
     "gitBranch": "js-mlkem768-rename",
-    "gitClean": true,
+    "gitClean": false,
     "node": "v22.17.1",
     "deps": {
       "libp2p": "3.1.2",
@@ -19,9 +19,11 @@
   "hybridId": "/noise-mlkem768-hfs/0.2.0",
   "classicalId": "/noise",
   "downgradeSucceeded": true,
+  "defenceHolds": true,
   "results": [
     {
       "mode": "baseline-direct",
+      "defended": false,
       "listenerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
       "dialerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
       "connected": true,
@@ -47,7 +49,7 @@
             "/downgrade-demo/echo/1.0.0"
           ],
           "addresses": [
-            "/ip4/127.0.0.1/tcp/54174"
+            "/ip4/127.0.0.1/tcp/54840"
           ],
           "metadataKeys": [
             "last-dial-success"
@@ -76,6 +78,7 @@
     },
     {
       "mode": "baseline-tap",
+      "defended": false,
       "listenerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
       "dialerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
       "connected": true,
@@ -101,7 +104,7 @@
             "/downgrade-demo/echo/1.0.0"
           ],
           "addresses": [
-            "/ip4/127.0.0.1/tcp/54177"
+            "/ip4/127.0.0.1/tcp/49946"
           ],
           "metadataKeys": [
             "last-dial-success"
@@ -163,6 +166,7 @@
     },
     {
       "mode": "attack",
+      "defended": false,
       "listenerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
       "dialerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
       "connected": true,
@@ -188,7 +192,7 @@
             "/downgrade-demo/echo/1.0.0"
           ],
           "addresses": [
-            "/ip4/127.0.0.1/tcp/54181"
+            "/ip4/127.0.0.1/tcp/49950"
           ],
           "metadataKeys": [
             "last-dial-success"
@@ -214,6 +218,142 @@
       "agreedEncrypter": "/noise",
       "bothOnHybrid": false,
       "bothOnClassical": true,
+      "wireTranscript": [
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        }
+      ],
+      "proxyMode": "attack"
+    },
+    {
+      "mode": "baseline-tap-defended",
+      "defended": true,
+      "listenerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+      "dialerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+      "connected": true,
+      "dialerView": {
+        "encryption": "/noise-mlkem768-hfs/0.2.0",
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatchesListener": true
+      },
+      "listenerView": {
+        "encryption": "/noise-mlkem768-hfs/0.2.0",
+        "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+        "remotePeerMatchesDialer": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "peerStore": {
+        "dialerRecordsListener": {
+          "id": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "protocols": [
+            "/downgrade-demo/echo/1.0.0"
+          ],
+          "addresses": [
+            "/ip4/127.0.0.1/tcp/49954"
+          ],
+          "metadataKeys": [
+            "last-dial-success"
+          ],
+          "tagKeys": [],
+          "hasPeerRecordEnvelope": false,
+          "recordsEncrypter": false,
+          "recordsNoiseStaticKey": false
+        },
+        "listenerRecordsDialer": {
+          "id": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+          "protocols": [
+            "/downgrade-demo/echo/1.0.0"
+          ],
+          "addresses": [],
+          "metadataKeys": [],
+          "tagKeys": [],
+          "hasPeerRecordEnvelope": false,
+          "recordsEncrypter": false,
+          "recordsNoiseStaticKey": false
+        }
+      },
+      "agreedEncrypter": "/noise-mlkem768-hfs/0.2.0",
+      "bothOnHybrid": true,
+      "bothOnClassical": false,
+      "wireTranscript": [
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        }
+      ],
+      "proxyMode": "tap"
+    },
+    {
+      "mode": "attack-defended",
+      "defended": true,
+      "listenerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+      "dialerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+      "connected": false,
+      "error": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise])",
       "wireTranscript": [
         {
           "dir": "dialer->listener",

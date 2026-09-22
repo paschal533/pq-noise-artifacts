@@ -28,7 +28,17 @@ function seed (byte) {
   return s
 }
 
-export async function makeNode ({ seedByte, listen = false }) {
+// The security protocols these nodes offer, in preference order. Passed to
+// the encrypters when the defence is on so each peer can state, inside the
+// encrypted handshake, what it actually offered.
+export const OFFERED_PROTOCOLS = ['/noise-mlkem768-hfs/0.2.0', '/noise']
+
+export async function makeNode ({ seedByte, listen = false, defended = false }) {
+  // When defended, both encrypters bind the handshake to the offered list
+  // and abort a session whose negotiated protocol contradicts it.
+  const binding = defended
+    ? { transcriptBinding: { mode: 'enforce', securityProtocols: OFFERED_PROTOCOLS } }
+    : {}
   const privateKey = await generateKeyPairFromSeed('Ed25519', seed(seedByte))
   const node = await createLibp2p({
     privateKey,
@@ -36,7 +46,7 @@ export async function makeNode ({ seedByte, listen = false }) {
     transports: [tcp()],
     // Hybrid first, classical second: a peer that prefers post-quantum but
     // remains backward compatible.
-    connectionEncrypters: [noiseHFS(), noise()],
+    connectionEncrypters: [noiseHFS(binding), noise(binding)],
     streamMuxers: [yamux()],
     connectionGater: {
       // Loopback-only demo; keep the dial policy permissive and local.

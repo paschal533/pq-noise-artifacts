@@ -115,8 +115,11 @@ async function safeGet (node, peerId) {
 }
 
 async function runPhase (mode) {
-  const listener = await makeNode({ seedByte: SEED_LISTENER, listen: true })
-  const dialer = await makeNode({ seedByte: SEED_DIALER, listen: false })
+  // Phases suffixed -defended enable transcript-bound negotiation on both
+  // peers; everything else about the phase is unchanged.
+  const defended = mode.endsWith('-defended')
+  const listener = await makeNode({ seedByte: SEED_LISTENER, listen: true, defended })
+  const dialer = await makeNode({ seedByte: SEED_DIALER, listen: false, defended })
 
   // Echo handler proves the resulting session is a working, muxed,
   // mutually-authenticated channel.
@@ -134,12 +137,12 @@ async function runPhase (mode) {
   let proxy = null
   let dialMa = listenMa
   if (mode !== 'baseline-direct') {
-    const attack = mode === 'attack'
+    const attack = mode.startsWith('attack')
     proxy = await startProxy({ targetPort: tcpPortOf(listenMa), attack })
     dialMa = multiaddr(`/ip4/127.0.0.1/tcp/${proxy.port}/p2p/${listenerId}`)
   }
 
-  const result = { mode, listenerId, dialerId }
+  const result = { mode, defended, listenerId, dialerId }
 
   try {
     const conn = await dialer.dial(dialMa)
@@ -241,7 +244,7 @@ console.log(`node_modules link         : ${link.created ? 'created' : 'pre-exist
 console.log(`hybrid protocol id        : ${HYBRID_ID}`)
 console.log(`classical protocol id     : ${CLASSICAL_ID}`)
 
-const phases = ['baseline-direct', 'baseline-tap', 'attack']
+const phases = ['baseline-direct', 'baseline-tap', 'attack', 'baseline-tap-defended', 'attack-defended']
 const results = []
 for (const mode of phases) {
   results.push(await runPhase(mode))
@@ -261,12 +264,31 @@ if (downgradeSucceeded) {
   console.log('  Downgrade did NOT reproduce as predicted. See per-phase results above (this is a finding, not a failure).')
 }
 
+// ---- does the defence stop it? ----
+const defendedBaseline = results.find(r => r.mode === 'baseline-tap-defended')
+const defendedAttack = results.find(r => r.mode === 'attack-defended')
+const defenceHolds = defendedBaseline?.bothOnHybrid === true && defendedAttack?.connected === false
+console.log('\n=== VERDICT: transcript-bound negotiation ===')
+if (defenceHolds) {
+  console.log('  DEFENCE HOLDS: with the binding enabled both peers still negotiate the hybrid')
+  console.log('  encrypter when unobstructed, and the same on-path attack no longer produces a')
+  console.log('  session at all. The downgraded handshake is refused rather than completed.')
+  console.log(`  refusal seen by the dialer: ${defendedAttack?.error}`)
+} else if (defendedBaseline?.bothOnHybrid !== true) {
+  console.log('  INCONCLUSIVE: the defended baseline did not reach the hybrid encrypter, so the')
+  console.log('  attack phase proves nothing. See the per-phase results above.')
+} else {
+  console.log('  DEFENCE DID NOT HOLD: the attack still produced a completed session with the')
+  console.log('  binding enabled. See the per-phase results above (this is a finding, not a failure).')
+}
+
 const summary = {
   when: new Date().toISOString(),
   provenance,
   hybridId: HYBRID_ID,
   classicalId: CLASSICAL_ID,
   downgradeSucceeded,
+  defenceHolds,
   results
 }
 writeFileSync(resolve(outDir, 'results.json'), JSON.stringify(summary, null, 2))

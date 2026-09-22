@@ -1,0 +1,32 @@
+[
+  {
+    "dir": "dialer->listener",
+    "action": "forward",
+    "protocol": "/multistream/1.0.0"
+  },
+  {
+    "dir": "dialer->listener",
+    "action": "forward",
+    "protocol": "/noise-mlkem768-hfs/0.2.0"
+  },
+  {
+    "dir": "dialer->listener",
+    "action": "relay-start",
+    "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "forward",
+    "protocol": "/multistream/1.0.0"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "forward",
+    "protocol": "/noise-mlkem768-hfs/0.2.0"
+  },
+  {
+    "dir": "listener->dialer",
+    "action": "relay-start",
+    "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+  }
+]
