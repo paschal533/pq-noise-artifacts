@@ -41,6 +41,15 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 PYTHON="${PYTHON:-python}"
 IMPLS="${IMPLS:-JS Python Nim Rust}"
 REPS="${REPS:-3}"
+# Transcript-bound negotiation. Only JS and Python support it; the Nim and Rust
+# harnesses have no flag for it yet, which is deliberate rather than an
+# oversight for `extension`: an unbound peer is exactly the case that variant is
+# designed to interoperate with, so a mixed matrix is the real test of that
+# claim. `identity` is different, because it moves the protocol identifier and
+# changes what identity_sig covers, so a bound peer cannot talk to an unbound
+# one at all and the matrix has to be restricted.
+TRANSCRIPT_BINDING="${TRANSCRIPT_BINDING:-off}"
+SIMULATE_DOWNGRADE="${SIMULATE_DOWNGRADE:-0}"
 PORT="${BASE_PORT:-9400}"
 READY_TICKS=150       # x 0.2 s
 DIAL_TIMEOUT=60       # seconds
@@ -62,6 +71,25 @@ for impl in "${IMPL_LIST[@]}"; do
   esac
 done
 [[ "$REPS" =~ ^[1-9][0-9]{0,3}$ ]] || die "REPS must be an integer from 1 to 9999 (got '$REPS')"
+
+case "$TRANSCRIPT_BINDING" in
+  off|extension|identity) ;;
+  *) die "TRANSCRIPT_BINDING must be off, extension or identity (got '$TRANSCRIPT_BINDING')" ;;
+esac
+case "$SIMULATE_DOWNGRADE" in
+  0|1) ;;
+  *) die "SIMULATE_DOWNGRADE must be 0 or 1 (got '$SIMULATE_DOWNGRADE')" ;;
+esac
+if [ "$TRANSCRIPT_BINDING" = identity ]; then
+  for impl in "${IMPL_LIST[@]}"; do
+    case "$impl" in
+      Nim|Rust) die "TRANSCRIPT_BINDING=identity moves the protocol identifier, so it cannot interoperate with $impl, whose harness has no flag for it. Restrict with IMPLS=\"JS Python\"." ;;
+    esac
+  done
+fi
+if [ "$SIMULATE_DOWNGRADE" = 1 ] && [ "$TRANSCRIPT_BINDING" = off ]; then
+  die "SIMULATE_DOWNGRADE=1 needs TRANSCRIPT_BINDING set to extension or identity; with the mechanism off there is nothing to detect the simulated downgrade"
+fi
 [[ "$PORT" =~ ^[1-9][0-9]{0,4}$ ]] || die "BASE_PORT must be a positive integer port (got '$PORT')"
 LAST_PORT=$((PORT + ${#IMPL_LIST[@]} * ${#IMPL_LIST[@]} * REPS - 1))
 [ "$LAST_PORT" -le 65535 ] || die "BASE_PORT=$PORT needs ports up to $LAST_PORT, beyond 65535"
@@ -100,14 +128,22 @@ esac
 
 exe () { if [ -x "$1.exe" ]; then echo "$1.exe"; else echo "$1"; fi; }
 
+# Extra arguments for the harnesses that understand transcript binding. Empty
+# when the mechanism is off, so an off run invokes exactly what it used to.
+BIND_ARGS=()
+if [ "$TRANSCRIPT_BINDING" != off ]; then
+  BIND_ARGS+=(--transcript-binding "$TRANSCRIPT_BINDING")
+  [ "$SIMULATE_DOWNGRADE" = 1 ] && BIND_ARGS+=(--simulate-downgrade)
+fi
+
 # Sets the array CMD to the command for role/impl/port. An array rather than
 # an echoed string, so directory paths containing spaces stay one argument.
 set_cmd () { # role impl port
   case "$1:$2" in
-    listen:JS)     CMD=(node "$JS_DIR/scripts/node-listener.mjs" --port "$3") ;;
-    dial:JS)       CMD=(node "$JS_DIR/scripts/noise-hfs-dial.mjs" --port "$3") ;;
-    listen:Python) CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_listen_mlkem768.py" --port "$3") ;;
-    dial:Python)   CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_dial_mlkem768.py" --port "$3") ;;
+    listen:JS)     CMD=(node "$JS_DIR/scripts/node-listener.mjs" --port "$3" "${BIND_ARGS[@]}") ;;
+    dial:JS)       CMD=(node "$JS_DIR/scripts/noise-hfs-dial.mjs" --port "$3" "${BIND_ARGS[@]}") ;;
+    listen:Python) CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_listen_mlkem768.py" --port "$3" "${BIND_ARGS[@]}") ;;
+    dial:Python)   CMD=(env "PYTHONPATH=$PY_DIR" "$PYTHON" "$PY_DIR/scripts/interop_dial_mlkem768.py" --port "$3" "${BIND_ARGS[@]}") ;;
     listen:Nim)    CMD=("$(exe "$NIM_DIR/interop/noise-pq/interop_listen")" "$3") ;;
     dial:Nim)      CMD=("$(exe "$NIM_DIR/interop/noise-pq/interop_dial")" "$3") ;;
     listen:Rust)   CMD=("$(exe "$RUST_DIR/target/debug/examples/noise_hfs_listener")" "$3") ;;
@@ -202,6 +238,8 @@ git_or () { # dir fallback args...
          "$(git_or "$dir" unknown-commit rev-parse HEAD)" \
          "$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')_dirty"
   done
+  echo "transcript_binding $TRANSCRIPT_BINDING simulate_downgrade $SIMULATE_DOWNGRADE"
+  echo "binding_supported_by JS Python (Nim and Rust harnesses have no flag)"
   node -v; "$PYTHON" --version; nim -v 2>/dev/null | head -1; rustc --version
 } > "$OUT/versions.txt" 2>&1
 
