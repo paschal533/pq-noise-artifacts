@@ -1,0 +1,4 @@
+BINDING extension /noise-mlkem768-hfs/0.2.0 SIMULATE_DOWNGRADE
+LOCAL 12D3KooWKQz2ZMxEUAWGbccC8F2gEsSuqAMMTw3SwyAW6Udv7vqh
+READY 9861
+ERROR security protocol downgrade detected: /noise-interop-phantom/1.0.0 should have been negotiated, but this session is running /noise-mlkem768-hfs/0.2.0 (dialer offered [/noise-interop-phantom/1.0.0, /noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-interop-phantom/1.0.0, /noise-mlkem768-hfs/0.2.0, /noise])

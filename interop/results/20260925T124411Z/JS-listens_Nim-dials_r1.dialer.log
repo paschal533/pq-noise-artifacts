@@ -1,0 +1,6 @@
+LOCAL 12D3KooWFw1awerv2YLWMurndbDgxRav66BjhjwLnVdd9Ci8aRgT
+DIALING port 9806
+PEER 12D3KooWMAcScebEwhBDfTx8WWHyBuZL8EF7MsjkjfrGeYBxT8M9
+RECV hello from JS
+SENT hello from Nim
+INTEROP_OK

@@ -1,0 +1,6 @@
+BINDING off /noise-mlkem768-hfs/0.2.0
+LOCAL 12D3KooWJvvbdaVngsKoHhj1TPh2B4kVyvwWwN93jCVTF9mmZU2v
+PEER 12D3KooWSUFwfvY6yoUi6QuGvxc5QNfgxh1apLxEzY5UEo93uVYq
+RECV hello from Python
+SENT hello from JS
+INTEROP_OK

@@ -1,0 +1,5 @@
+LOCAL 12D3KooWJdkxvYd58NnAgNTd7gcjuX3MJV1c6PTpoDAfButcNvZx
+PEER 12D3KooWJ3QzYw8qwNYAbQavCgScJuGvws86FkQXPtUPnXL81tYC
+RECV hello from Python
+SENT hello from Rust
+INTEROP_OK

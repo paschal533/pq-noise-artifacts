@@ -1,0 +1,7 @@
+BINDING off /noise-mlkem768-hfs/0.2.0
+LOCAL 12D3KooWJjw4AnwDndcGmH6v6u7jzxaYZtemnY1UW7uKVx5fWigE
+READY 9711
+PEER 12D3KooWSDVF4L1BTYjUgAwc8aWVS61oedSeHYzNyYRJFhYRCbBr
+SENT hello from JS
+RECV hello from Rust
+INTEROP_OK

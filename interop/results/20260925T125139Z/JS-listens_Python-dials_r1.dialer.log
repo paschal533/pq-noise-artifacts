@@ -1,0 +1,6 @@
+LOCAL 12D3KooWAiSdvRx2vv3R7DmAYuMegVPDcCgxgQLeEhVsucnGeNpM
+BINDING identity /noise-mlkem768-hfs/0.3.0
+PEER 12D3KooWRKMgF5BtTuDyJrLESCoCKCaMkjRaz2qW98nEGUvxBLeV
+RECV hello from JS
+SENT hello from Python
+INTEROP_OK

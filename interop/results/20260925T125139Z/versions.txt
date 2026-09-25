@@ -1,0 +1,13 @@
+date_utc 2026-09-25T12:51:40Z
+# fields: var basename remote branch commit dirty_lines
+# remote and branch come from a remote-tracking ref pointing at HEAD, so the pair is fetchable
+JS_DIR wt-js-rename https://github.com/paschal533/js-libp2p-noise.git feat/pqc-xxhfs-noise ad2f5cfbfdd36b2fe228b534f1c35cc257c8645e 0_dirty
+PY_DIR py-libp2p https://github.com/paschal533/py-libp2p.git feat/pqc-noise-xxhfs 55e1a6e12b7982d0236da5aa14daceac88200398 0_dirty
+NIM_DIR nim-libp2p https://github.com/paschal533/nim-libp2p.git feat/noise-hfs-pqc f15881dffb3bfd6b7f19772ced8285c2b3da88c7 0_dirty
+RUST_DIR wt-rust-rename https://github.com/paschal533/rust-libp2p.git feat/noise-mlkem-hfs bdd417e2c2526d5dbfafa55cb4a89bf7132236fe 0_dirty
+transcript_binding identity simulate_downgrade 0
+binding_supported_by JS Python (Nim and Rust harnesses have no flag)
+v22.17.1
+Python 3.13.14
+Nim Compiler Version 2.2.10 [Windows: amd64]
+rustc 1.95.0 (59807616e 2026-04-14)

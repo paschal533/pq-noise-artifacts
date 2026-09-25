@@ -1,0 +1,7 @@
+BINDING extension /noise-mlkem768-hfs/0.2.0
+LOCAL 12D3KooWMAcScebEwhBDfTx8WWHyBuZL8EF7MsjkjfrGeYBxT8M9
+READY 9806
+PEER 12D3KooWFw1awerv2YLWMurndbDgxRav66BjhjwLnVdd9Ci8aRgT
+SENT hello from JS
+RECV hello from Nim
+INTEROP_OK

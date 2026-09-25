@@ -1,0 +1,6 @@
+LOCAL 12D3KooWANmL6M6nSq8HMrvcj1SVw5JymEyqWdtWzj6Gfeq5woKK
+DIALING port 9744
+PEER 12D3KooWRJjvGffVdoC4qPAdg2Hwv481bPvBmzTzU5AGcQeTUrcf
+RECV hello from Rust
+SENT hello from Nim
+INTEROP_OK
