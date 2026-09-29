@@ -1,0 +1,4 @@
+# node_modules here is a link to the JS implementation checkout's node_modules,
+# created by setup.mjs at run time. Never commit it.
+node_modules/
+__pycache__/

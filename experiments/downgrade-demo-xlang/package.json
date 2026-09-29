@@ -1,0 +1,11 @@
+{
+  "name": "libp2p-downgrade-demo-xlang",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-language (js-libp2p <-> py-libp2p) run of the security-protocol downgrade experiment, with and without transcript binding.",
+  "scripts": {
+    "demo": "node run-xlang.mjs"
+  },
+  "license": "Apache-2.0 OR MIT"
+}

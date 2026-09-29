@@ -1,0 +1,1870 @@
+{
+  "when": "2026-09-29T23:02:20.582Z",
+  "provenance": {
+    "js": {
+      "implementation": "wt-js-rename",
+      "packageName": "@chainsafe/libp2p-noise",
+      "packageVersion": "17.0.0",
+      "gitHead": "f9587d99b5f21501d5011cc72a1049ffa3abb69a",
+      "gitBranch": "js-mlkem768-rename",
+      "gitClean": true,
+      "node": "v22.17.1",
+      "deps": {
+        "libp2p": "3.1.2",
+        "@libp2p/tcp": "11.0.9",
+        "@chainsafe/libp2p-yamux": "8.0.1",
+        "@libp2p/multistream-select": null
+      }
+    },
+    "python": {
+      "implementation": "py-libp2p",
+      "gitHead": "aaa4ae97ef58b2dac49db6f6a83b09d20010e349",
+      "gitBranch": "feat/transcript-bound-negotiation",
+      "gitClean": true,
+      "python": "3.13.14"
+    }
+  },
+  "hybridId": "/noise-mlkem768-hfs/0.2.0",
+  "classicalId": "/noise",
+  "results": [
+    {
+      "direction": "js->py",
+      "phase": "tap",
+      "defended": false,
+      "attack": false,
+      "ports": {
+        "target": 9710,
+        "proxy": 9750
+      },
+      "dialerView": {
+        "connected": true,
+        "encryption": "/noise-mlkem768-hfs/0.2.0",
+        "muxer": "/yamux/1.0.0",
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "dialerConnectionsOpened": [
+        {
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "direction": "outbound",
+          "encryption": "/noise-mlkem768-hfs/0.2.0",
+          "muxer": "/yamux/1.0.0"
+        }
+      ],
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsSeenInEcho": [
+          {
+            "security": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "finalConnections": {
+          "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        "echoServed": true
+      },
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "listen",
+          "defence": "off",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "addr": "/ip4/127.0.0.1/tcp/9710"
+        },
+        {
+          "event": "secure-ok",
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "event": "echo-served",
+          "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+          "received": "PING-downgrade-demo",
+          "connections": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "final-connections",
+          "connections": {
+            "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+              {
+                "security": "/noise-mlkem768-hfs/0.2.0",
+                "muxer": "/yamux/1.0.0"
+              }
+            ]
+          }
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 1984,
+            "listener->dialer": 2126
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 1984,
+            "listener->dialer": 2126
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 1984,
+            "listener->dialer": 2126
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 1984,
+            "listener->dialer": 2126
+          }
+        }
+      ]
+    },
+    {
+      "direction": "js->py",
+      "phase": "tap-defended",
+      "defended": true,
+      "attack": false,
+      "ports": {
+        "target": 9711,
+        "proxy": 9751
+      },
+      "dialerView": {
+        "connected": true,
+        "encryption": "/noise-mlkem768-hfs/0.2.0",
+        "muxer": "/yamux/1.0.0",
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "dialerConnectionsOpened": [
+        {
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "direction": "outbound",
+          "encryption": "/noise-mlkem768-hfs/0.2.0",
+          "muxer": "/yamux/1.0.0"
+        }
+      ],
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsSeenInEcho": [
+          {
+            "security": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "finalConnections": {
+          "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        "echoServed": true
+      },
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "listen",
+          "defence": "on",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "addr": "/ip4/127.0.0.1/tcp/9711"
+        },
+        {
+          "event": "secure-ok",
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "event": "echo-served",
+          "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+          "received": "PING-downgrade-demo",
+          "connections": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "final-connections",
+          "connections": {
+            "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+              {
+                "security": "/noise-mlkem768-hfs/0.2.0",
+                "muxer": "/yamux/1.0.0"
+              }
+            ]
+          }
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 2085,
+            "listener->dialer": 2229
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 2085,
+            "listener->dialer": 2229
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 2085,
+            "listener->dialer": 2229
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 2085,
+            "listener->dialer": 2229
+          }
+        }
+      ]
+    },
+    {
+      "direction": "js->py",
+      "phase": "attack",
+      "defended": false,
+      "attack": true,
+      "ports": {
+        "target": 9712,
+        "proxy": 9752
+      },
+      "dialerView": {
+        "connected": true,
+        "encryption": "/noise",
+        "muxer": "/yamux/1.0.0",
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise"
+        }
+      ],
+      "dialerConnectionsOpened": [
+        {
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "direction": "outbound",
+          "encryption": "/noise",
+          "muxer": "/yamux/1.0.0"
+        }
+      ],
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsSeenInEcho": [
+          {
+            "security": "/noise",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "finalConnections": {
+          "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+            {
+              "security": "/noise",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        "echoServed": true
+      },
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "listen",
+          "defence": "off",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "addr": "/ip4/127.0.0.1/tcp/9712"
+        },
+        {
+          "event": "secure-ok",
+          "side": "inbound",
+          "encrypter": "/noise"
+        },
+        {
+          "event": "echo-served",
+          "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+          "received": "PING-downgrade-demo",
+          "connections": [
+            {
+              "security": "/noise",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "final-connections",
+          "connections": {
+            "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns": [
+              {
+                "security": "/noise",
+                "muxer": "/yamux/1.0.0"
+              }
+            ]
+          }
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 808,
+            "listener->dialer": 1007
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 808,
+            "listener->dialer": 1007
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 808,
+            "listener->dialer": 1007
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 808,
+            "listener->dialer": 1007
+          }
+        }
+      ]
+    },
+    {
+      "direction": "js->py",
+      "phase": "attack-defended",
+      "defended": true,
+      "attack": true,
+      "ports": {
+        "target": 9713,
+        "proxy": 9753
+      },
+      "dialerView": {
+        "connected": false,
+        "dialError": {
+          "name": "EncryptionFailedError",
+          "code": null,
+          "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise])"
+        },
+        "cause": null
+      },
+      "dialerHandshakes": [
+        {
+          "ok": false,
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": {
+            "name": "DowngradeDetectedError",
+            "code": "ERR_SECURITY_PROTOCOL_DOWNGRADE",
+            "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise])"
+          }
+        }
+      ],
+      "dialerConnectionsOpened": [],
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsSeenInEcho": null,
+        "finalConnections": {},
+        "echoServed": false
+      },
+      "listenerHandshakes": [
+        {
+          "ok": false,
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.io.exceptions.IncompleteReadError",
+              "message": "Connection closed during read operation: expected 2 bytes but received 0 bytes"
+            }
+          ]
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "listen",
+          "defence": "on",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "addr": "/ip4/127.0.0.1/tcp/9713"
+        },
+        {
+          "event": "secure-error",
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.io.exceptions.IncompleteReadError",
+              "message": "Connection closed during read operation: expected 2 bytes but received 0 bytes"
+            }
+          ]
+        },
+        {
+          "event": "final-connections",
+          "connections": {}
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "socket-error",
+          "conn": 0,
+          "side": "dialer",
+          "note": "Error: read ECONNRESET"
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 337
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 337
+          }
+        }
+      ]
+    },
+    {
+      "direction": "py->js",
+      "phase": "tap",
+      "defended": false,
+      "attack": false,
+      "ports": {
+        "target": 9720,
+        "proxy": 9760
+      },
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsOpened": [
+          {
+            "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+            "direction": "inbound",
+            "encryption": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeerMatches": true
+      },
+      "dialerView": {
+        "connected": true,
+        "connections": [
+          {
+            "security": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "dial",
+          "defence": "off",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns"
+        },
+        {
+          "event": "secure-ok",
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "event": "connected",
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "connections": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "echo",
+          "sent": "PING-downgrade-demo",
+          "received": "PING-downgrade-demo",
+          "ok": true
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\nFailed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 2454,
+            "listener->dialer": 2004
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 2454,
+            "listener->dialer": 2004
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 2454,
+            "listener->dialer": 2004
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 2454,
+            "listener->dialer": 2004
+          }
+        }
+      ]
+    },
+    {
+      "direction": "py->js",
+      "phase": "tap-defended",
+      "defended": true,
+      "attack": false,
+      "ports": {
+        "target": 9721,
+        "proxy": 9761
+      },
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsOpened": [
+          {
+            "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+            "direction": "inbound",
+            "encryption": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeerMatches": true
+      },
+      "dialerView": {
+        "connected": true,
+        "connections": [
+          {
+            "security": "/noise-mlkem768-hfs/0.2.0",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "dial",
+          "defence": "on",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns"
+        },
+        {
+          "event": "secure-ok",
+          "side": "outbound",
+          "encrypter": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "event": "connected",
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "connections": [
+            {
+              "security": "/noise-mlkem768-hfs/0.2.0",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "echo",
+          "sent": "PING-downgrade-demo",
+          "received": "PING-downgrade-demo",
+          "ok": true
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\nFailed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise-mlkem768-hfs/0.2.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 2557,
+            "listener->dialer": 2105
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 2557,
+            "listener->dialer": 2105
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 2557,
+            "listener->dialer": 2105
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 2557,
+            "listener->dialer": 2105
+          }
+        }
+      ]
+    },
+    {
+      "direction": "py->js",
+      "phase": "attack",
+      "defended": false,
+      "attack": true,
+      "ports": {
+        "target": 9722,
+        "proxy": 9762
+      },
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsOpened": [
+          {
+            "remotePeer": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns",
+            "direction": "inbound",
+            "encryption": "/noise",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeerMatches": true
+      },
+      "dialerView": {
+        "connected": true,
+        "connections": [
+          {
+            "security": "/noise",
+            "muxer": "/yamux/1.0.0"
+          }
+        ],
+        "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+        "remotePeerMatches": true
+      },
+      "echo": {
+        "sent": "PING-downgrade-demo",
+        "received": "PING-downgrade-demo",
+        "ok": true
+      },
+      "dialerHandshakes": [
+        {
+          "ok": true,
+          "side": "outbound",
+          "encrypter": "/noise"
+        }
+      ],
+      "listenerHandshakes": [
+        {
+          "ok": true,
+          "side": "inbound",
+          "encrypter": "/noise"
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "dial",
+          "defence": "off",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns"
+        },
+        {
+          "event": "secure-ok",
+          "side": "outbound",
+          "encrypter": "/noise"
+        },
+        {
+          "event": "connected",
+          "remotePeer": "12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz",
+          "connections": [
+            {
+              "security": "/noise",
+              "muxer": "/yamux/1.0.0"
+            }
+          ]
+        },
+        {
+          "event": "echo",
+          "sent": "PING-downgrade-demo",
+          "received": "PING-downgrade-demo",
+          "ok": true
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "Failed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\nFailed to open stream to peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz:\r\n  Error: protocols not supported: tried ['/ipfs/id/1.0.0'], timeout=10s. Last error: protocol not supported: /ipfs/id/1.0.0, response='na'\r\n  Protocols: ['/ipfs/id/1.0.0']\r\n  Timeout: 30s\r\n  Connection: Yamux\r\n  Connection State: established=True, handshake=False\r\n  Registry Stats: None\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 1278,
+            "listener->dialer": 885
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 1278,
+            "listener->dialer": 885
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 1278,
+            "listener->dialer": 885
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 1278,
+            "listener->dialer": 885
+          }
+        }
+      ]
+    },
+    {
+      "direction": "py->js",
+      "phase": "attack-defended",
+      "defended": true,
+      "attack": true,
+      "ports": {
+        "target": 9723,
+        "proxy": 9763
+      },
+      "pyExit": {
+        "code": 0,
+        "signal": null
+      },
+      "listenerView": {
+        "connectionsOpened": [],
+        "remotePeerMatches": false
+      },
+      "dialerView": {
+        "connected": false,
+        "dialError": [
+          {
+            "class": "libp2p.network.exceptions.SwarmDialAllFailedError",
+            "message": "unable to connect to 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz, no addresses established a successful connection (with exceptions)"
+          },
+          {
+            "class": "libp2p.exceptions.MultiError",
+            "message": "Error 1: failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"
+          },
+          {
+            "class": "libp2p.network.exceptions.SwarmException",
+            "message": "failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"
+          },
+          {
+            "class": "libp2p.transport.exceptions.SecurityUpgradeFailure",
+            "message": "handshake failed when upgrading to secure connection"
+          },
+          {
+            "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+            "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+          }
+        ]
+      },
+      "echo": null,
+      "dialerHandshakes": [
+        {
+          "ok": false,
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "ok": false,
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "ok": false,
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "ok": false,
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        }
+      ],
+      "listenerHandshakes": [
+        {
+          "ok": false,
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": {
+            "name": "UnexpectedEOFError",
+            "code": null,
+            "message": "Unexpected EOF - stream closed while reading 0/1 bytes"
+          }
+        },
+        {
+          "ok": false,
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": {
+            "name": "UnexpectedEOFError",
+            "code": null,
+            "message": "Unexpected EOF - stream closed while reading 0/1 bytes"
+          }
+        },
+        {
+          "ok": false,
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": {
+            "name": "UnexpectedEOFError",
+            "code": null,
+            "message": "Unexpected EOF - stream closed while reading 0/1 bytes"
+          }
+        },
+        {
+          "ok": false,
+          "side": "inbound",
+          "encrypter": "/noise",
+          "error": {
+            "name": "UnexpectedEOFError",
+            "code": null,
+            "message": "Unexpected EOF - stream closed while reading 0/1 bytes"
+          }
+        }
+      ],
+      "pyEvents": [
+        {
+          "event": "config",
+          "role": "dial",
+          "defence": "on",
+          "offered": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ],
+          "secOptOrder": [
+            "/noise-mlkem768-hfs/0.2.0",
+            "/noise"
+          ]
+        },
+        {
+          "event": "ready",
+          "peerId": "12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns"
+        },
+        {
+          "event": "secure-error",
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "event": "secure-error",
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "event": "secure-error",
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "event": "secure-error",
+          "side": "outbound",
+          "encrypter": "/noise",
+          "error": [
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "event": "dial-error",
+          "error": [
+            {
+              "class": "libp2p.network.exceptions.SwarmDialAllFailedError",
+              "message": "unable to connect to 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz, no addresses established a successful connection (with exceptions)"
+            },
+            {
+              "class": "libp2p.exceptions.MultiError",
+              "message": "Error 1: failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"
+            },
+            {
+              "class": "libp2p.network.exceptions.SwarmException",
+              "message": "failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"
+            },
+            {
+              "class": "libp2p.transport.exceptions.SecurityUpgradeFailure",
+              "message": "handshake failed when upgrading to secure connection"
+            },
+            {
+              "class": "libp2p.security.noise.exceptions.SecurityProtocolDowngrade",
+              "message": "security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"
+            }
+          ]
+        },
+        {
+          "event": "exit"
+        }
+      ],
+      "pyStderr": "failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection\r\nfailed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection\r\nfailed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection\r\nfailed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection\r\n",
+      "wireTranscript": [
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 0
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 0,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 0,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 1
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 1,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 1,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 1,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 1,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 2
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 2,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 2,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 2,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 2,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "conn-open",
+          "conn": 3
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/multistream/1.0.0"
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "rewrite",
+          "from": "/noise-mlkem768-hfs/0.2.0",
+          "to": "/noise-mlkem768-xxx/0.2.0",
+          "note": "stripped the hybrid proposal: rewrote it to an unknown protocol id of identical length so the listener answers \"na\""
+        },
+        {
+          "dir": "dialer->listener",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise-mlkem768-hfs/0.2.0\"); switching to raw relay"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "na"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "forward",
+          "protocol": "/noise"
+        },
+        {
+          "dir": "listener->dialer",
+          "action": "relay-start",
+          "note": "negotiation settled (last frame \"/noise\"); switching to raw relay"
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 3,
+          "from": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 3,
+          "side": "dialer",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "fin",
+          "conn": 3,
+          "from": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        },
+        {
+          "dir": "proxy",
+          "action": "close",
+          "conn": 3,
+          "side": "listener",
+          "bytes": {
+            "dialer->listener": 89,
+            "listener->dialer": 351
+          }
+        }
+      ]
+    }
+  ]
+}

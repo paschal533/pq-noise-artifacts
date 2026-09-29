@@ -1,0 +1,179 @@
+cross-language security-protocol downgrade experiment (loopback only)
+js     : @chainsafe/libp2p-noise@17.0.0 js-mlkem768-rename@f9587d99b5f21501d5011cc72a1049ffa3abb69a (clean), node v22.17.1, libp2p@3.1.2
+python : py-libp2p feat/transcript-bound-negotiation@aaa4ae97ef58b2dac49db6f6a83b09d20010e349 (clean), python 3.13.14
+node_modules link: pre-existing
+
+=== js->py / tap  (proxy tap, defence off) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0"
+    listener->dialer: "/multistream/1.0.0"
+    listener->dialer: "/noise-mlkem768-hfs/0.2.0"
+  wire: listener selected       : /noise-mlkem768-hfs/0.2.0
+  wire: tcp conn 0 first hang-up : FIN from listener; bytes d->l 1984, l->d 2126
+  dialer view   : {"connected":true,"encryption":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0","remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise-mlkem768-hfs/0.2.0: OK
+  listener view : {"connectionsSeenInEcho":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"finalConnections":{"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}]},"echoServed":true}
+  listener handshakes:
+      inbound /noise-mlkem768-hfs/0.2.0: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== js->py / tap-defended  (proxy tap, defence ON) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0"
+    listener->dialer: "/multistream/1.0.0"
+    listener->dialer: "/noise-mlkem768-hfs/0.2.0"
+  wire: listener selected       : /noise-mlkem768-hfs/0.2.0
+  wire: tcp conn 0 first hang-up : FIN from listener; bytes d->l 2085, l->d 2229
+  dialer view   : {"connected":true,"encryption":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0","remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise-mlkem768-hfs/0.2.0: OK
+  listener view : {"connectionsSeenInEcho":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"finalConnections":{"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}]},"echoServed":true}
+  listener handshakes:
+      inbound /noise-mlkem768-hfs/0.2.0: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== js->py / attack  (proxy ATTACK, defence off) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "/multistream/1.0.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+  wire: listener selected       : /noise
+  wire: tcp conn 0 first hang-up : FIN from listener; bytes d->l 808, l->d 1007
+  dialer view   : {"connected":true,"encryption":"/noise","muxer":"/yamux/1.0.0","remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise: OK
+  listener view : {"connectionsSeenInEcho":[{"security":"/noise","muxer":"/yamux/1.0.0"}],"finalConnections":{"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns":[{"security":"/noise","muxer":"/yamux/1.0.0"}]},"echoServed":true}
+  listener handshakes:
+      inbound /noise: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== js->py / attack-defended  (proxy ATTACK, defence ON) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "/multistream/1.0.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+  wire: listener selected       : /noise
+  wire: tcp conn 0 first hang-up : Error: read ECONNRESET on dialer socket; bytes d->l 89, l->d 337
+  dialer view   : {"connected":false,"dialError":{"name":"EncryptionFailedError","code":null,"message":"security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise])"},"cause":null}
+  dialer handshakes:
+      outbound /noise: FAILED DowngradeDetectedError [ERR_SECURITY_PROTOCOL_DOWNGRADE]: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise])
+  listener view : {"connectionsSeenInEcho":null,"finalConnections":{},"echoServed":false}
+  listener handshakes:
+      inbound /noise: FAILED libp2p.io.exceptions.IncompleteReadError: Connection closed during read operation: expected 2 bytes but received 0 bytes
+  echo          : undefined
+  python exit   : {"code":0,"signal":null}
+
+=== py->js / tap  (proxy tap, defence off) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0"
+    listener->dialer: "/noise-mlkem768-hfs/0.2.0"
+  wire: listener selected       : /noise-mlkem768-hfs/0.2.0
+  wire: tcp conn 0 first hang-up : FIN from dialer; bytes d->l 2454, l->d 2004
+  dialer view   : {"connected":true,"connections":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise-mlkem768-hfs/0.2.0: OK
+  listener view : {"connectionsOpened":[{"remotePeer":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","direction":"inbound","encryption":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"remotePeerMatches":true}
+  listener handshakes:
+      inbound /noise-mlkem768-hfs/0.2.0: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== py->js / tap-defended  (proxy tap, defence ON) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0"
+    listener->dialer: "/noise-mlkem768-hfs/0.2.0"
+  wire: listener selected       : /noise-mlkem768-hfs/0.2.0
+  wire: tcp conn 0 first hang-up : FIN from dialer; bytes d->l 2557, l->d 2105
+  dialer view   : {"connected":true,"connections":[{"security":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise-mlkem768-hfs/0.2.0: OK
+  listener view : {"connectionsOpened":[{"remotePeer":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","direction":"inbound","encryption":"/noise-mlkem768-hfs/0.2.0","muxer":"/yamux/1.0.0"}],"remotePeerMatches":true}
+  listener handshakes:
+      inbound /noise-mlkem768-hfs/0.2.0: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== py->js / attack  (proxy ATTACK, defence off) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+  wire: listener selected       : /noise
+  wire: tcp conn 0 first hang-up : FIN from dialer; bytes d->l 1278, l->d 885
+  dialer view   : {"connected":true,"connections":[{"security":"/noise","muxer":"/yamux/1.0.0"}],"remotePeer":"12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz","remotePeerMatches":true}
+  dialer handshakes:
+      outbound /noise: OK
+  listener view : {"connectionsOpened":[{"remotePeer":"12D3KooWLdJAwPtyQ5RFnr9wGXsQzpf3P2SeqFbYkqbfVehLu4Ns","direction":"inbound","encryption":"/noise","muxer":"/yamux/1.0.0"}],"remotePeerMatches":true}
+  listener handshakes:
+      inbound /noise: OK
+  echo          : {"sent":"PING-downgrade-demo","received":"PING-downgrade-demo","ok":true}
+  python exit   : {"code":0,"signal":null}
+
+=== py->js / attack-defended  (proxy ATTACK, defence ON) ===
+  wire (security multistream-select frames seen by the proxy):
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+    dialer->listener: "/multistream/1.0.0"
+    listener->dialer: "/multistream/1.0.0"
+    dialer->listener: "/noise-mlkem768-hfs/0.2.0" REWRITTEN to "/noise-mlkem768-xxx/0.2.0"
+    listener->dialer: "na"
+    listener->dialer: "/noise"
+  wire: listener selected       : /noise
+  wire: tcp conn 0 first hang-up : FIN from dialer; bytes d->l 89, l->d 351
+  wire: tcp conn 1 first hang-up : FIN from dialer; bytes d->l 89, l->d 351
+  wire: tcp conn 2 first hang-up : FIN from dialer; bytes d->l 89, l->d 351
+  wire: tcp conn 3 first hang-up : FIN from dialer; bytes d->l 89, l->d 351
+  dialer view   : {"connected":false,"dialError":[{"class":"libp2p.network.exceptions.SwarmDialAllFailedError","message":"unable to connect to 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz, no addresses established a successful connection (with exceptions)"},{"class":"libp2p.exceptions.MultiError","message":"Error 1: failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"},{"class":"libp2p.network.exceptions.SwarmException","message":"failed to upgrade security for peer 12D3KooWPqT2nMDSiXUSx5D7fasaxhxKigVhcqfkKqrLghCq9jxz: handshake failed when upgrading to secure connection"},{"class":"libp2p.transport.exceptions.SecurityUpgradeFailure","message":"handshake failed when upgrading to secure connection"},{"class":"libp2p.security.noise.exceptions.SecurityProtocolDowngrade","message":"security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])"}]}
+  dialer handshakes:
+      outbound /noise: FAILED libp2p.security.noise.exceptions.SecurityProtocolDowngrade: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])
+      outbound /noise: FAILED libp2p.security.noise.exceptions.SecurityProtocolDowngrade: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])
+      outbound /noise: FAILED libp2p.security.noise.exceptions.SecurityProtocolDowngrade: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])
+      outbound /noise: FAILED libp2p.security.noise.exceptions.SecurityProtocolDowngrade: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise'])
+  listener view : {"connectionsOpened":[],"remotePeerMatches":false}
+  listener handshakes:
+      inbound /noise: FAILED UnexpectedEOFError: Unexpected EOF - stream closed while reading 0/1 bytes
+      inbound /noise: FAILED UnexpectedEOFError: Unexpected EOF - stream closed while reading 0/1 bytes
+      inbound /noise: FAILED UnexpectedEOFError: Unexpected EOF - stream closed while reading 0/1 bytes
+      inbound /noise: FAILED UnexpectedEOFError: Unexpected EOF - stream closed while reading 0/1 bytes
+  echo          : null
+  python exit   : {"code":0,"signal":null}
+
+=== SUMMARY TABLE ===
+direction | phase | wire selected | tcp attempts | dialer encrypter | listener encrypter | connection | echo | dialer error | listener error
+js->py | tap | /noise-mlkem768-hfs/0.2.0 | 1 | /noise-mlkem768-hfs/0.2.0 | /noise-mlkem768-hfs/0.2.0 | ESTABLISHED | ok | - | -
+js->py | tap-defended | /noise-mlkem768-hfs/0.2.0 | 1 | /noise-mlkem768-hfs/0.2.0 | /noise-mlkem768-hfs/0.2.0 | ESTABLISHED | ok | - | -
+js->py | attack | /noise | 1 | /noise | /noise | ESTABLISHED | ok | - | -
+js->py | attack-defended | /noise | 1 | /noise | /noise | REFUSED/FAILED | - | DowngradeDetectedError [ERR_SECURITY_PROTOCOL_DOWNGRADE]: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered [/noise-mlkem768-hfs/0.2.0, /noise], listener supports [/noise-mlkem768-hfs/0.2.0, /noise]) | IncompleteReadError: Connection closed during read operation: expected 2 bytes but received 0 bytes
+py->js | tap | /noise-mlkem768-hfs/0.2.0 | 1 | /noise-mlkem768-hfs/0.2.0 | /noise-mlkem768-hfs/0.2.0 | ESTABLISHED | ok | - | -
+py->js | tap-defended | /noise-mlkem768-hfs/0.2.0 | 1 | /noise-mlkem768-hfs/0.2.0 | /noise-mlkem768-hfs/0.2.0 | ESTABLISHED | ok | - | -
+py->js | attack | /noise | 1 | /noise | /noise | ESTABLISHED | ok | - | -
+py->js | attack-defended | /noise | 4 | /noise | /noise | REFUSED/FAILED | - | SecurityProtocolDowngrade: security protocol downgrade detected: /noise-mlkem768-hfs/0.2.0 should have been negotiated, but this session is running /noise (dialer offered ['/noise-mlkem768-hfs/0.2.0', '/noise'], listener supports ['/noise-mlkem768-hfs/0.2.0', '/noise']) | UnexpectedEOFError: Unexpected EOF - stream closed while reading 0/1 bytes
