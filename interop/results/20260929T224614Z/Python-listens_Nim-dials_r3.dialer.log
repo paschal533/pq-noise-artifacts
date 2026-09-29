@@ -1,0 +1,6 @@
+LOCAL 12D3KooWM3cfSqjrxXiqPkHMWa7ej2JxtHue4sfET6P8vMwrV1Hx
+DIALING port 9420
+PEER 12D3KooWSsGtcSWRfDaUcJeD9kWurWgg36cpNj41eZTKag1Z4z8S
+RECV hello from Python
+SENT hello from Nim
+INTEROP_OK

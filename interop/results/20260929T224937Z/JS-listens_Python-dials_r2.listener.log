@@ -1,0 +1,4 @@
+BINDING extension /noise-mlkem768-hfs/0.2.0 SIMULATE_DOWNGRADE
+LOCAL 12D3KooWABKM7S6oKiksMZRop8737ZjJZ7oZcvCu6eLeoX7Vfvvs
+READY 9404
+ERROR Unexpected EOF - stream closed while reading 0/1 bytes

@@ -1,0 +1,4 @@
+LOCAL 12D3KooWAF9ohrgpqpAH5vvRoyoBvd8vB69ZZ6qB2LhvF1X4yCpR
+BINDING identity /noise-mlkem768-hfs/0.3.0 SIMULATE_DOWNGRADE
+READY 9410
+ERROR HandshakeMalformed('XXhfs inbound handshake failed')

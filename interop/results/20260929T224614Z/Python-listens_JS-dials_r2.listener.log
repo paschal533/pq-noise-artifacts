@@ -1,0 +1,7 @@
+LOCAL 12D3KooWNmyUcpuqWrZ9Js3o2QFFjLo4F1hMwLbqeL9V5DzuRrd9
+BINDING extension /noise-mlkem768-hfs/0.2.0
+READY 9413
+PEER 12D3KooWF15aNWTynpbCiv436n32LPhvhkdTnMbiAK53aw2Yz1az
+SENT hello from Python
+RECV hello from JS
+INTEROP_OK

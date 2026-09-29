@@ -1,0 +1,4 @@
+BINDING identity /noise-mlkem768-hfs/0.3.0 SIMULATE_DOWNGRADE
+LOCAL 12D3KooWQHGAk9KmUaH5WUzxdRH6uahNnHzxUK9dTaM1Qx63ttDT
+READY 9403
+ERROR Unexpected EOF - stream closed while reading 0/1 bytes

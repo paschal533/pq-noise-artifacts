@@ -1,0 +1,6 @@
+LOCAL 12D3KooWCNCidjzz9yT2pcuwrzTJ5fPSyEZRWdnZBDX2BjLuBwUo
+BINDING extension /noise-mlkem768-hfs/0.2.0
+PEER 12D3KooWS7EHLPtF9nPX73Tibav3JbGrgJDeYDW9txxQ6HBFADuY
+RECV hello from Rust
+SENT hello from Python
+INTEROP_OK

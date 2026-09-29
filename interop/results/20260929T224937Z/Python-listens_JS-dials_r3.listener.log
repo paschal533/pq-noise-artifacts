@@ -1,0 +1,4 @@
+LOCAL 12D3KooWA4kApw1Kfnev4k4Q6t5SSgyn4f3b7rUDqbZeuv8e1itC
+BINDING extension /noise-mlkem768-hfs/0.2.0 SIMULATE_DOWNGRADE
+READY 9408
+ERROR HandshakeMalformed('XXhfs inbound handshake failed')
