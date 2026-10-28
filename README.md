@@ -1,13 +1,49 @@
-# Post-quantum Noise for libp2p, artifacts
+<h1 align="center">Post-quantum Noise for libp2p</h1>
 
-Interoperability test vectors, benchmarks and harnesses for
-`Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`, a post-quantum hybrid of the Noise XX
-handshake, implemented across three libp2p language ecosystems and verified interoperable, in
-both directions, with each other and with a fourth, independently written Rust implementation.
+<p align="center"><b>Interop test vectors, benchmarks and harnesses for<br>
+<code>Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256</code> across four libp2p implementations.</b></p>
+
+<p align="center">
+  <img alt="interop" src="https://img.shields.io/badge/interop-48%2F48_runs-0f766e">
+  <img alt="implementations" src="https://img.shields.io/badge/implementations-TypeScript%20%C2%B7%20Python%20%C2%B7%20Nim%20%C2%B7%20Rust-2f6f9f">
+  <img alt="kem" src="https://img.shields.io/badge/KEM-ML--KEM--768_(FIPS_203)-7c3aed">
+  <a href="#licence"><img alt="licence" src="https://img.shields.io/badge/licence-MIT_%C2%B7_CC_BY_4.0-6b7280"></a>
+</p>
+
+A post-quantum hybrid of the Noise XX handshake, implemented across three libp2p language
+ecosystems and verified interoperable, in both directions, with each other and with a fourth,
+independently written Rust implementation.
 
 The handshake adds an ephemeral KEM step, the Noise HFS tokens `e1` and `ekem1`, alongside the
 existing X25519 operations. Forward secrecy holds if **either** X25519 **or** ML-KEM-768 is
 unbroken, so classical security is preserved rather than replaced.
+
+<p align="center">
+  <img src="docs/xxhfs-animated.svg" width="900"
+       alt="Animated Noise XXhfs handshake: message A carries e and the ML-KEM-768 key e1 (1,216 B); message B carries e, ee, the KEM ciphertext ekem1, s and es (1,200 B); message C carries s and se (64 B). Each DH result and the KEM shared secret are mixed into the chaining key, which splits into one transport key per direction.">
+</p>
+<p align="center"><sub>Animated view, chip widths to scale. Source: <a href="docs/make_xxhfs_animation.py"><code>docs/make_xxhfs_animation.py</code></a>.
+The static sequence diagram is below.</sub></p>
+
+## At a glance
+
+| | |
+|---|---|
+| **Interop** | every ordered pairing of the four implementations, 3 runs each: **48 / 48 passed**, no protocol change needed ([details](#interoperability)) |
+| **Wire cost** | 1,216 + 1,200 + 64 = 2,480 B with empty payloads, 2,288 B more than classical XX |
+| **Handshake cost, backend held constant** | JavaScript **1.51x**, Rust **1.24x**, Nim **1.13x**, Python **1.42 to 1.44x** on its C-backed default (10.7x on pure-Python `kyber-py`) ([details](#headline-result)) |
+| **Security** | forward secrecy holds if **either** X25519 **or** ML-KEM-768 is unbroken; authentication stays classical |
+
+## Contents
+
+- [How it works](#how-it-works)
+- [The work](#the-work)
+- [Repository contents](#repository-contents)
+- [Interoperability](#interoperability)
+- [Headline result](#headline-result)
+- [Licence](#licence)
+
+## How it works
 
 <p align="center">
   <img src="docs/xxhfs-handshake.svg" width="880"
@@ -23,16 +59,17 @@ because `split()` gives each direction its own key, and only a frame in each dir
 The accompanying paper is in preparation and not published anywhere yet. This repository is
 published independently so the claims can be checked now.
 
-**Name change.** Earlier versions of this profile were called
-`Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`. Noise (revision 34, §8.2) allows only
-alphanumeric characters and `/` in an algorithm name, so the profile is now
-`Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`; [@royzah](https://github.com/royzah) spotted it.
-The name is hashed into the handshake, so the two are not wire-compatible, and the protocol
-identifier moved from `/noise-mlkem768-hfs/0.1.0` to `/noise-mlkem768-hfs/0.2.0`. Message sizes
-are unchanged. `/noise-mlkem768-hfs/0.2.0` is what the four implementations ship, not a
-spec-endorsed identifier: [`libp2p/specs#727`](https://github.com/libp2p/specs/pull/727) writes
-`/noise-mlkem768-hfs/0.1.0` and lists the identifier string as the first of its open issues. The
-implementations will follow whatever #727 settles on.
+> [!NOTE]
+> **Name change.** Earlier versions of this profile were called
+> `Noise_XXhfs_25519+ML-KEM-768_ChaChaPoly_SHA256`. Noise (revision 34, §8.2) allows only
+> alphanumeric characters and `/` in an algorithm name, so the profile is now
+> `Noise_XXhfs_25519+MLKEM768_ChaChaPoly_SHA256`; [@royzah](https://github.com/royzah) spotted it.
+> The name is hashed into the handshake, so the two are not wire-compatible, and the protocol
+> identifier moved from `/noise-mlkem768-hfs/0.1.0` to `/noise-mlkem768-hfs/0.2.0`. Message sizes
+> are unchanged. `/noise-mlkem768-hfs/0.2.0` is what the four implementations ship, not a
+> spec-endorsed identifier: [`libp2p/specs#727`](https://github.com/libp2p/specs/pull/727) writes
+> `/noise-mlkem768-hfs/0.1.0` and lists the identifier string as the first of its open issues. The
+> implementations will follow whatever #727 settles on.
 
 ## The work
 
@@ -45,7 +82,7 @@ implementations will follow whatever #727 settles on.
 | Rust | [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481), **written independently by [@royzah](https://github.com/royzah)**. Not our work; we tested against it |
 | Rust interop harness | [`royzah/rust-libp2p#1`](https://github.com/royzah/rust-libp2p/pull/1): our listener and dialer examples and benchmarks, on top of #6481 |
 
-## Contents
+## Repository contents
 
 | path | what it is |
 |---|---|
@@ -120,6 +157,16 @@ dialer read message B, and the same-implementation pairs passed. With a TypeScri
 printed a fake `LOCAL` identity, the handshake and both messages completed and the identity
 cross-check caught it.
 
+**The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
+written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
+a different ML-KEM-768 library again, BoringSSL, rather than `@noble/post-quantum`, `kyber-py` or
+RustCrypto's `ml-kem`. Four implementations written independently against the prose specification,
+against four different KEM libraries, interoperating without protocol changes, is reasonable
+evidence that the specification is unambiguous at the wire level.
+
+<details>
+<summary><b>Earlier claims, corrected</b> (what a previous version of this README got wrong)</summary>
+
 **Earlier claims, corrected.** A previous version of this README showed a pairwise table dated
 June to September 2026 and said the June 2026 triangle (TypeScript, Python, Rust) had exchanged an
 encrypted transport message after each handshake. It had not. The runner used then counted a pair
@@ -134,12 +181,7 @@ royzah renamed it to `MLKEM768` on 17 August 2026 (snow `858dc27`; rust-libp2p `
 rebased as `e7a1286`), and the rename was on the #6481 branch by 22 August 2026 at the latest, so the
 5 September run was already behind the pull request. The matrix above replaces those claims.
 
-**The Rust implementation is [`libp2p/rust-libp2p#6481`](https://github.com/libp2p/rust-libp2p/pull/6481),
-written independently by [@royzah](https://github.com/royzah). It is not our work.** Nim also uses
-a different ML-KEM-768 library again, BoringSSL, rather than `@noble/post-quantum`, `kyber-py` or
-RustCrypto's `ml-kem`. Four implementations written independently against the prose specification,
-against four different KEM libraries, interoperating without protocol changes, is reasonable
-evidence that the specification is unambiguous at the wire level.
+</details>
 
 ## Headline result
 
